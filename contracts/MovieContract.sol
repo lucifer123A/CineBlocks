@@ -26,7 +26,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     movieName = _movieName;
     creationDate = now;
   }
-
+// Stucts
   struct movieDetails{
     string name;
     string details;
@@ -49,6 +49,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
 
    movieDetails public movie;
 
+//Mappings
   mapping(address => bool) public profitAdded;
   mapping (uint256 => withdrawDetails) public withdrawlsByOwner;
   mapping (address => investorDetails)public investors;
@@ -59,6 +60,11 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     _; 
   }
   
+//Events
+  event TokenSold(address buyer,uint256 amount);
+  event etherWithdrawn(address rec,uint256 amount);
+
+
 
   function addMovie(string memory _details, string memory _ipfs, uint256 _timeInDays) public onlyOwner{
     movie.name = movieName;
@@ -87,6 +93,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     investedAmount[_to] = msg.value;
     token.transfer(_to,_numberOfTokens);
     totalTokenSold += _numberOfTokens;
+    emit TokenSold(_to,_numberOfTokens);
   }
 
   function  useEther(uint256 _amount, string memory _reason) public onlyOwner{
@@ -95,7 +102,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     withdrawCount++;
     withdrawlsByOwner[withdrawCount] = withdrawDetails(msg.sender, _amount,now, _reason);
     owner.transfer(_amount);   
-    
+    emit etherWithdrawn(msg.sender,_amount);
   }
   
 
