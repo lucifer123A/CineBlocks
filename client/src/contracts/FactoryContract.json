@@ -1,0 +1,183 @@
+{
+  "contractName": "FactoryContract",
+  "abi": [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/zaryab/blockchain_begins/all_about_ethereum/dapps/dapp_Jedi/contracts/FactoryContract.sol\":\"FactoryContract\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/zaryab/blockchain_begins/all_about_ethereum/dapps/dapp_Jedi/contracts/FactoryContract.sol\":{\"keccak256\":\"0x61db9cd78a313ee8f6a88d78e65c60178be17cce09ebed2c866212c621b7681a\",\"urls\":[\"bzz-raw://433b9d69d7b8eec0bf20207807f0de5186899ade0a396785df3b6f5cc36cd76a\",\"dweb:/ipfs/QmcfJVzJNXR5PXXL8HtuJqaBKFqvwqWu4pvGEbN24MmAuy\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603e80601d6000396000f3fe6080604052600080fdfea265627a7a72315820b2e8d3fecbb45b8dff9d86f67f06c7a91baf740f971fd7bb37cde0ee45c5668464736f6c63430005100032",
+  "deployedBytecode": "0x6080604052600080fdfea265627a7a72315820b2e8d3fecbb45b8dff9d86f67f06c7a91baf740f971fd7bb37cde0ee45c5668464736f6c63430005100032",
+  "sourceMap": "35:57:0:-;;;64:26;8:9:-1;5:2;;;30:1;27;20:12;5:2;64:26:0;35:57;;;;;;",
+  "deployedSourceMap": "35:57:0:-;;;;;",
+  "source": "pragma solidity >= 0.5.0 < 0.7.0;\n\ncontract FactoryContract {\n  constructor() public {\n  }\n}\n",
+  "sourcePath": "/home/zaryab/blockchain_begins/all_about_ethereum/dapps/dapp_Jedi/contracts/FactoryContract.sol",
+  "ast": {
+    "absolutePath": "/home/zaryab/blockchain_begins/all_about_ethereum/dapps/dapp_Jedi/contracts/FactoryContract.sol",
+    "exportedSymbols": {
+      "FactoryContract": [
+        6
+      ]
+    },
+    "id": 7,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".0",
+          "<",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:33:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 6,
+        "linearizedBaseContracts": [
+          6
+        ],
+        "name": "FactoryContract",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4,
+              "nodeType": "Block",
+              "src": "85:5:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 5,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "75:2:0"
+            },
+            "returnParameters": {
+              "id": 3,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "85:0:0"
+            },
+            "scope": 6,
+            "src": "64:26:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 7,
+        "src": "35:57:0"
+      }
+    ],
+    "src": "0:93:0"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/zaryab/blockchain_begins/all_about_ethereum/dapps/dapp_Jedi/contracts/FactoryContract.sol",
+    "exportedSymbols": {
+      "FactoryContract": [
+        6
+      ]
+    },
+    "id": 7,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".0",
+          "<",
+          "0.7",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:33:0"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 6,
+        "linearizedBaseContracts": [
+          6
+        ],
+        "name": "FactoryContract",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4,
+              "nodeType": "Block",
+              "src": "85:5:0",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 5,
+            "implemented": true,
+            "kind": "constructor",
+            "modifiers": [],
+            "name": "",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "75:2:0"
+            },
+            "returnParameters": {
+              "id": 3,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "85:0:0"
+            },
+            "scope": 6,
+            "src": "64:26:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 7,
+        "src": "35:57:0"
+      }
+    ],
+    "src": "0:93:0"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.23",
+  "updatedAt": "2020-08-31T03:18:08.513Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
