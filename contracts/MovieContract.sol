@@ -1,5 +1,6 @@
 pragma solidity ^0.5.1;
 
+import "./TokenFactory.sol";
 import "./SafeMath.sol";
 
 contract MovieContract {
@@ -18,6 +19,7 @@ contract MovieContract {
   uint256 public withdrawCount;
 
     
+TokenFactory public token;
 
 
 constructor(string memory _movieName, address payable _movieCreator) public{
@@ -46,7 +48,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     string reason;
   }
 
-  movieDetails public movie;
+   movieDetails public movie;
 
   mapping(address => bool) public profitAdded;
   mapping (uint256 => withdrawDetails) public withdrawlsByOwner;
@@ -65,5 +67,13 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     movie.ipfsHash = _ipfs;
     deadline = now + _timeInDays * 1 days;
   }
+
+  function  createMovieToken(string memory _symbol, string memory _name, uint256 _totalSupply) public onlyOwner{
+      token = new TokenFactory(_symbol, _name, _totalSupply);
+      tokenAddress = address(token);
+      tokenName = _name;
+      totalSupply = _totalSupply;
+  }
+
 
 }
