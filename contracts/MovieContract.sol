@@ -17,8 +17,7 @@ contract MovieContract {
   uint256 public creationDate;
   uint256 public investorCount;
   uint256 public withdrawCount;
-
-    
+  
 TokenFactory public token;
 
 
@@ -52,11 +51,11 @@ constructor(string memory _movieName, address payable _movieCreator) public{
 
   mapping(address => bool) public profitAdded;
   mapping (uint256 => withdrawDetails) public withdrawlsByOwner;
-  mapping (uint256 => investorDetails)public investors;
+  mapping (address => investorDetails)public investors;
   mapping (address => uint256 ) public investedAmount;
 
   modifier  onlyOwner() { 
-    require(msg.sender == owner); 
+    require(msg.sender == owner, "Caller is not the owner"); 
     _; 
   }
   
@@ -75,29 +74,49 @@ constructor(string memory _movieName, address payable _movieCreator) public{
       totalSupply = _totalSupply;
   }
 
-  //amountToGive = rate.mul(msg.value); // if user send 1 ETH it will give 1000 tokens.
+//amountToGive = rate.mul(msg.value); // if user send 1 ETH it will give 1000 tokens.
   function buyMovieTokens(string memory _name, string memory _contact) public payable{
     require (msg.value > 0);
-    require (now > deadline);
-    
     token = TokenFactory(tokenAddress);
     uint256 _numberOfTokens = tokenPrice.mul(msg.value);
     address payable _to = msg.sender;
 
     require(token.balanceOf(address(this)) >= _numberOfTokens, "Token Quantity Exceeded");
     investorCount++;
-    investors[investorCount] = investorDetails(_name, _contact,_to,_numberOfTokens.div(1000000000000000000));
+    investors[msg.sender] = investorDetails(_name, _contact,_to,_numberOfTokens.div(1000000000000000000));
     investedAmount[_to] = msg.value;
     token.transfer(_to,_numberOfTokens);
     totalTokenSold += _numberOfTokens;
   }
 
-   function  useEther(uint256 _amount, string memory _reason) public onlyOwner{
-    require(now > deadline);
+  function  useEther(uint256 _amount, string memory _reason) public onlyOwner{
+    require(now > deadline, "Deadline isn't over yet");
     require (address(this).balance > _amount, "Not Enough ETHER to Withdraw");
     withdrawCount++;
     withdrawlsByOwner[withdrawCount] = withdrawDetails(msg.sender, _amount,now, _reason);
     owner.transfer(_amount);   
     
   }
+  
+
+function getBalance() public view returns(uint256){
+    return address(this).balance;
+}
+  function unlockEther(uint256 _amountOfTokens) public returns(uint256){
+    require(now < deadline, "Deadline already Achieved");
+    address payable user = msg.sender;
+    token = TokenFactory(tokenAddress);
+  
+    uint256 totalTokens = token.balanceOf(user);
+    require (_amountOfTokens.mul(1000000000000000000) < totalTokens, "Not Enough tokens");
+    uint256 totalEth = _amountOfTokens.mul(1000000000000000);
+    require(investedAmount[msg.sender] > totalEth);
+    require(address(this).balance > totalEth, "Not Enough Ether to transfer");
+    investedAmount[user] -= totalEth;
+    user.transfer(totalEth);
+    //Deaduct User's Token Balnace ????
+    //Transfer the user's submitted tokens to the contract.
+  }
+    
+   
 }
