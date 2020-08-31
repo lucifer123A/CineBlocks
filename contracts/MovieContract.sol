@@ -75,5 +75,20 @@ constructor(string memory _movieName, address payable _movieCreator) public{
       totalSupply = _totalSupply;
   }
 
+  //amountToGive = rate.mul(msg.value); // if user send 1 ETH it will give 1000 tokens.
+  function buyMovieTokens(string memory _name, string memory _contact) public payable{
+    require (msg.value > 0);
+    require (now > deadline);
+    
+    token = TokenFactory(tokenAddress);
+    uint256 _numberOfTokens = tokenPrice.mul(msg.value);
+    address payable _to = msg.sender;
 
+    require(token.balanceOf(address(this)) >= _numberOfTokens, "Token Quantity Exceeded");
+    investorCount++;
+    investors[investorCount] = investorDetails(_name, _contact,_to,_numberOfTokens.div(1000000000000000000));
+    investedAmount[_to] = msg.value;
+    token.transfer(_to,_numberOfTokens);
+    totalTokenSold += _numberOfTokens;
+  }
 }
