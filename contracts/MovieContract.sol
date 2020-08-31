@@ -91,4 +91,13 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     token.transfer(_to,_numberOfTokens);
     totalTokenSold += _numberOfTokens;
   }
+
+   function  useEther(uint256 _amount, string memory _reason) public onlyOwner{
+    require(now > deadline);
+    require (address(this).balance > _amount, "Not Enough ETHER to Withdraw");
+    withdrawCount++;
+    withdrawlsByOwner[withdrawCount] = withdrawDetails(msg.sender, _amount,now, _reason);
+    owner.transfer(_amount);   
+    
+  }
 }
