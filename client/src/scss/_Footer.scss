@@ -1,0 +1,38 @@
+footer{
+
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    .copyright{
+        color: white;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    ul{
+        list-style-type: none;
+
+        li{
+            margin: 5px;
+        }
+    }
+
+    .social-icons{
+        bottom: 1rem;
+        left: 1rem;
+        font-size: large;
+        margin-top: 1rem;
+
+        a{
+            padding: 0.4rem;
+            color: white;
+            margin: 1rem;
+            @include transition-ease;
+
+            &:hover{
+                color: $secondary-color;
+            }
+        }
+        margin-bottom: 1rem;
+    }
+}

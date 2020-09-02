@@ -1,0 +1,92 @@
+.creatorPage{
+
+    height: 100%;
+    background: $primary-color;
+
+    .navbar{
+
+        background: $secondary-color;
+        margin-bottom: 10px;
+        .navbar-brand{
+
+            margin-right: auto;
+            margin-left: auto;
+
+            img{
+                width: 30vw;
+            }
+        }
+    }
+
+    .nav-tabs{
+        border-bottom: 1px solid $primary-color;
+        @include transition-ease;
+        a{
+            color: $secondary-color;
+        }
+        .active{
+            color: $secondary-color;
+            background: black;
+            border-color: black;
+        }
+    }
+
+    .AddMovieTitle{
+        font-weight: 800;
+        font-size: 5vh;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: yellow;
+    }
+    
+    .addMovieCard{
+        background: set-text-color($secondary-color);
+        
+        label{
+            color: $secondary-color;
+        }
+
+        .form-control-file{
+            color: white;
+        }
+    }
+
+    .cardContainer{
+        background: set-text-color($secondary-color);
+    }
+
+    .cardContainerTitle{
+
+        font-weight: 800;
+        font-size: 5vh;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: yellow;
+    }
+
+    .movieDetails.card{
+
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        background: $secondary-color;
+        @include transition-ease;
+
+        &:hover{
+
+            background: set-text-color($secondary-color);
+            opacity: 0.9;
+            color: yellow;
+            
+            .linkToInfo{
+                font-weight: 600;
+                color: yellow;
+            }
+        }
+
+        .linkToInfo{
+
+            text-decoration: underline;
+            color: black;
+        }
+    }
+}

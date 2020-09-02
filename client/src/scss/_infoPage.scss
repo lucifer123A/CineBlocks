@@ -1,0 +1,43 @@
+.infoPage{
+
+    height: 100%;
+    min-height: 100vh;
+    background: $primary-color;
+
+    .navbar{
+
+        background: $secondary-color;
+        margin-bottom: 10px;
+        .navbar-brand{
+
+            margin-right: auto;
+            margin-left: auto;
+
+            img{
+                width: 30vw;
+            }
+        }
+    }
+
+    .infoCard{
+        background: black;
+        color: $secondary-color;
+
+        .card-title{
+            font-weight: 800;
+            font-size: 5vh;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: $secondary-color;
+        }
+
+        img{
+            border: 1px solid $secondary-color;
+            margin-bottom: 3rem;
+        }
+
+        hr{
+            background: $secondary-color;
+        }
+    }
+}

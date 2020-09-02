@@ -1,0 +1,51 @@
+.home{
+    background: 
+        linear-gradient(
+            to right,
+            rgba($primary-color, 0.9),
+            rgba($primary-color, 0.8)
+        ),
+        url('../images/Background-1.png') center top;
+    background-size: cover;
+
+    height: 100vh;
+    padding-top: 20vh;
+    overflow: hidden;
+    align-items: center;
+    text-align: center;
+    color: white;
+
+    .title-welcome{
+        font-size: 3vw;
+    }
+
+    .title-app{
+
+        font-size: 10vw;
+        font-family: cursive;
+        color: $secondary-color;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid $secondary-color;
+        
+    }
+
+    button{
+        padding: 15px 32px;
+        margin-right: 2rem;
+        margin-bottom: 2rem;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: auto;
+        font-weight: 700;
+        width: 30vw;
+        height: fit-content;
+        opacity: 100;
+    }
+
+    img{
+        height: 20vw;
+        width: auto;
+    }
+}

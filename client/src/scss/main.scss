@@ -1,0 +1,23 @@
+@import "./config";
+@import "./FirstImage";
+@import "./CreatorPage";
+@import "./Footer";
+@import "./InvestorPage";
+@import "./infoPage";
+
+body{
+    
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
+
+    .App{
+
+        height: 100vh;
+        width: 100%;
+        footer{
+            bottom: 1rem;
+            position: absolute;
+        }
+    }
+}

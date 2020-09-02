@@ -1,0 +1,23 @@
+$primary-color: #1f1f1f;
+$secondary-color: #f5c518;
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+@mixin transition-ease{
+
+    transition: all 0.8s ease-in-out;
+}
+
+@function set-text-color($color){
+
+    @if (lightness($color) > 40%){
+        @return #000000;
+    }
+    @else{
+        @return #ffffff;
+    }
+}
