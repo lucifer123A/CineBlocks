@@ -16,7 +16,8 @@ contract MovieContract {
   uint256 public tokenPrice = 1000;
   uint256 public creationDate;
   uint256 public investorCount;
-  uint256 public withdrawCount;
+  uint256 public requestCount;
+  uint256 public voterCount;
   
 TokenFactory public token;
 
@@ -40,20 +41,25 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     uint256 tokensBought;
   }
 
-  struct withdrawDetails{
-    address withdrawnBy;
-    uint256 amountWithdrawn;
-    uint256 time;
-    string reason;
+  struct WithdrawRequest{
+  	 uint256 amountOfEth;
+     uint256 numberOfVoters;
+  	 string description;
+  	 string receiverDesignation;
+     bool completed;
+     address payable recipient;
+    
+    mapping(address=>bool) voters;
   }
 
    movieDetails public movie;
 
 //Mappings
-  mapping(address => bool) public profitAdded;
-  mapping (uint256 => withdrawDetails) public withdrawlsByOwner;
+  mapping (address => bool) public profitAdded;
   mapping (address => investorDetails)public investors;
   mapping (address => uint256 ) public investedAmount;
+  mapping (uint256 => WithdrawRequest) public requests;
+  
 
   modifier  onlyOwner() { 
     require(msg.sender == owner, "Caller is not the owner"); 
@@ -62,7 +68,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   
 //Events
   event TokenSold(address buyer,uint256 amount);
-  event etherWithdrawn(address rec,uint256 amount);
+  event etherWithdrawn(address rec,string designation,uint256 amount);
 
 
 
@@ -96,19 +102,36 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     emit TokenSold(_to,_numberOfTokens);
   }
 
-  function  useEther(uint256 _amount, string memory _reason) public onlyOwner{
-    require(now > deadline, "Deadline isn't over yet");
-    require (address(this).balance > _amount, "Not Enough ETHER to Withdraw");
-    withdrawCount++;
-    withdrawlsByOwner[withdrawCount] = withdrawDetails(msg.sender, _amount,now, _reason);
-    owner.transfer(_amount);   
-    emit etherWithdrawn(msg.sender,_amount);
+  function  initiateRequest(string memory _desc,address payable _rec,string memory _receiverDesignation,uint256 _val) public onlyOwner{
+  	requestCount++;
+  	requests[requestCount] = WithdrawRequest(_val.mul(1 ether),0,_desc,_receiverDesignation,false,_rec);
+  }
+  
+  function startVoting(uint256 _index) public{
+  		require (investedAmount[msg.sender] > 0,"Investor Not Eligible to VOTE");
+  		require (requests[_index].voters[msg.sender] == false,"Vote Already registered from this addreess");
+
+  		requests[_index].voters[msg.sender] = true;
+  		requests[_index].numberOfVoters++;	
+  }
+  
+
+  function  withdrawEther(uint256 _index) public onlyOwner{
+    require (requests[_index].completed == false,"This Request already Executed");
+    require (requests[_index].numberOfVoters > investorCount.div(2),"Vote Result is NEGATIVE");
+
+    requests[_index].recipient.transfer(requests[_index].amountOfEth);
+    requests[_index].completed == true;
+    
+    
+    emit etherWithdrawn(requests[_index].recipient,requests[_index].receiverDesignation,requests[_index].amountOfEth);
   }
   
 
 function getBalance() public view returns(uint256){
     return address(this).balance;
 }
+
   function unlockEther(uint256 _amountOfTokens) public returns(uint256){
     require(now < deadline, "Deadline already Achieved");
     address payable user = msg.sender;
