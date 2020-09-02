@@ -159,12 +159,6 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     emit etherWithdrawn(requests[_index].recipient,requests[_index].receiverDesignation,requests[_index].amountOfEth);
   }
   
-
-function getBalance() public view returns(uint256){
-    return address(this).balance;
-}
-
-
   function getBalance() public view returns(uint256){
       return address(this).balance;
   }
