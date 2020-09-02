@@ -16,10 +16,8 @@ contract MovieContract {
   uint256 public tokenPrice = 1000;
   uint256 public creationDate;
   uint256 public investorCount;
-<<<<<<< HEAD
   uint256 public requestCount;
   uint256 public voterCount;
-=======
   uint256 public withdrawCount;
   uint256 public totalInvestment;
   uint256 public totalProfit;
@@ -28,7 +26,6 @@ contract MovieContract {
 
   enum State { PRE_PRODUCTION, PRODUCTION, RELEASED, OVER } // Rate - 0.001, 0.003, profitDependent
   State public currentState = State.PRE_PRODUCTION;
->>>>>>> 9c47d82f3d99b1b567a8280d0d13aaeea8e1fec6
   
 TokenFactory public token;
 
@@ -79,12 +76,9 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   
 //Events
   event TokenSold(address buyer,uint256 amount);
-<<<<<<< HEAD
   event etherWithdrawn(address rec,string designation,uint256 amount);
-=======
   event etherWithdrawn(address rec,uint256 amount);
   event MovieState(State _currentState, uint _currentRate);
->>>>>>> 9c47d82f3d99b1b567a8280d0d13aaeea8e1fec6
 
 
 
@@ -166,17 +160,15 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   }
   
 
-<<<<<<< HEAD
 function getBalance() public view returns(uint256){
     return address(this).balance;
 }
 
-=======
+
   function getBalance() public view returns(uint256){
       return address(this).balance;
   }
   
->>>>>>> 9c47d82f3d99b1b567a8280d0d13aaeea8e1fec6
   function unlockEther(uint256 _amountOfTokens) public returns(uint256){
     require(now < deadline, "Deadline already Achieved");
     address payable user = msg.sender;
