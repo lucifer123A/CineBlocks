@@ -16,8 +16,19 @@ contract MovieContract {
   uint256 public tokenPrice = 1000;
   uint256 public creationDate;
   uint256 public investorCount;
+<<<<<<< HEAD
   uint256 public requestCount;
   uint256 public voterCount;
+=======
+  uint256 public withdrawCount;
+  uint256 public totalInvestment;
+  uint256 public totalProfit;
+
+  uint internal rate = 0.001 * 10 ** 18; //ETH per Token
+
+  enum State { PRE_PRODUCTION, PRODUCTION, RELEASED, OVER } // Rate - 0.001, 0.003, profitDependent
+  State public currentState = State.PRE_PRODUCTION;
+>>>>>>> 9c47d82f3d99b1b567a8280d0d13aaeea8e1fec6
   
 TokenFactory public token;
 
@@ -68,7 +79,12 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   
 //Events
   event TokenSold(address buyer,uint256 amount);
+<<<<<<< HEAD
   event etherWithdrawn(address rec,string designation,uint256 amount);
+=======
+  event etherWithdrawn(address rec,uint256 amount);
+  event MovieState(State _currentState, uint _currentRate);
+>>>>>>> 9c47d82f3d99b1b567a8280d0d13aaeea8e1fec6
 
 
 
@@ -79,18 +95,39 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     deadline = now + _timeInDays * 1 days;
   }
 
-  function  createMovieToken(string memory _symbol, string memory _name, uint256 _totalSupply) public onlyOwner{
+  function createMovieToken(string memory _symbol, string memory _name, uint256 _totalSupply) public onlyOwner{
       token = new TokenFactory(_symbol, _name, _totalSupply);
       tokenAddress = address(token);
       tokenName = _name;
       totalSupply = _totalSupply;
   }
 
+  function updateState(State _state) public onlyOwner returns (uint _rate) {
+    currentState = _state;
+    if(_state == State.PRODUCTION) {
+      rate = 0.003 * 10 ** 18;
+    }
+    // else if(_state == State.RELEASED) {
+    //   rate = 0.1;
+    // }
+    emit MovieState(currentState, rate);
+    return rate;
+  }
+
+  function reportProfit(string memory _source) public payable onlyOwner {
+    require(currentState == State.RELEASED);
+    require(msg.value > 0);
+    totalProfit += msg.value;
+    rate = totalProfit.div(totalInvestment);
+    emit MovieState(currentState, rate);    
+  }
+
 //amountToGive = rate.mul(msg.value); // if user send 1 ETH it will give 1000 tokens.
   function buyMovieTokens(string memory _name, string memory _contact) public payable{
     require (msg.value > 0);
     token = TokenFactory(tokenAddress);
-    uint256 _numberOfTokens = tokenPrice.mul(msg.value);
+    // uint256 _numberOfTokens = tokenPrice.mul(msg.value);
+    uint256 _numberOfTokens = msg.value.div(rate);
     address payable _to = msg.sender;
 
     require(token.balanceOf(address(this)) >= _numberOfTokens, "Token Quantity Exceeded");
@@ -99,6 +136,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     investedAmount[_to] = msg.value;
     token.transfer(_to,_numberOfTokens);
     totalTokenSold += _numberOfTokens;
+    totalInvestment += msg.value;
     emit TokenSold(_to,_numberOfTokens);
   }
 
@@ -128,10 +166,17 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   }
   
 
+<<<<<<< HEAD
 function getBalance() public view returns(uint256){
     return address(this).balance;
 }
 
+=======
+  function getBalance() public view returns(uint256){
+      return address(this).balance;
+  }
+  
+>>>>>>> 9c47d82f3d99b1b567a8280d0d13aaeea8e1fec6
   function unlockEther(uint256 _amountOfTokens) public returns(uint256){
     require(now < deadline, "Deadline already Achieved");
     address payable user = msg.sender;
@@ -139,7 +184,8 @@ function getBalance() public view returns(uint256){
   
     uint256 totalTokens = token.balanceOf(user);
     require (_amountOfTokens.mul(1000000000000000000) < totalTokens, "Not Enough tokens");
-    uint256 totalEth = _amountOfTokens.mul(1000000000000000);
+    // uint256 totalEth = _amountOfTokens.mul(1000000000000000);
+    uint256 totalEth = _amountOfTokens.mul(rate);
     require(investedAmount[msg.sender] > totalEth);
     require(address(this).balance > totalEth, "Not Enough Ether to transfer");
     investedAmount[user] -= totalEth;
