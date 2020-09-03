@@ -108,7 +108,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     return rate;
   }
 
-  function reportProfit(string memory _source) public payable onlyOwner {
+  function reportProfit() public payable onlyOwner {
     require(currentState == State.RELEASED);
     require(msg.value > 0);
     totalProfit += msg.value;
