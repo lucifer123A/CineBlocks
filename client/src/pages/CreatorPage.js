@@ -3,11 +3,12 @@ import { Container, Card, Row, Col, Image, Navbar, Carousel, Tabs, Tab, Form, Bu
 import { Link } from 'react-router-dom';
 import Web3 from 'web3';
 import Footer from './Footer';
+import AdminPanel from './../components/movieAdminPanel'
 import FactoryContract from '../contracts/FactoryContract.json';
 import MovieContract from '../contracts/MovieContract.json';
 import ipfs from './ipfs';
 
-const GAS = 1500000;
+const GAS = 10000000;
 const GAS_PRICE = "20000000000";
 
 class CreatorPage extends React.Component {
@@ -33,8 +34,8 @@ class CreatorPage extends React.Component {
             movieContractAddress: null,
             nextForm: null,
             movieInstance: null,
-            ipfsHash: null,
-            infoText: ''
+            ipfsHash: '',
+            infoText: '...'
         }
     }
 
@@ -49,8 +50,8 @@ class CreatorPage extends React.Component {
         const deployedNetwork = FactoryContract.networks[networkId];
         const FactoryInstance = new web3.eth.Contract(
             FactoryContract.abi,
-            // deployedNetwork.address
-            '0xbCf0166D8a3b374FFFbd4F9C16d6B73397CdEf06'
+            deployedNetwork.address
+            // '0xbCf0166D8a3b374FFFbd4F9C16d6B73397CdEf06'
         );
 
         
@@ -97,9 +98,9 @@ class CreatorPage extends React.Component {
 
         const res = await contract.methods.newMovieContract(this.state.MovieName)
             .send({from: this.state.accounts[0], gas: GAS, gasPrice: GAS_PRICE})
-            .then(res => {
-                console.log('new movie contract ', res)
-            })
+            // .then(res => {
+            //     console.log('new movie contract ', res)
+            // })
             .catch(err => console.log('Error generating movie contract ', err))
         await contract.methods.recentContract()
             .call()
@@ -125,7 +126,7 @@ class CreatorPage extends React.Component {
                 console.log('token ', txhash)
                 this.setState({infoText: 'Movie token Created! Pushing movie details..'})
             })
-        await this.upload();
+        // await this.upload();
 
         // TODO: add description field in contract and timeEnd in form here
         await instance.methods.addMovie(Summary, this.state.ipfsHash, web3.utils.toHex(100))
@@ -208,13 +209,13 @@ class CreatorPage extends React.Component {
                     </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                    <Button variant="warning" onClick={this.handleClick}>Instantiate Movie Contract</Button>
+                    <Button variant="warning" onClick={this.handleClick} disabled={this.state.movieContractAddress?true:false}>Instantiate Movie Contract</Button>
                 </Form.Row>
                 <Form.Row>
                     {this.state.movieContractAddress && 
                     <div>
-                        Movie contract address is {this.state.movieContractAddress}
-                        <Button variant='sucess' onClick={() => {
+                        <Form.Label>Movie contract address is <strong>{this.state.movieContractAddress}</strong></Form.Label>
+                        <Button variant='warning' onClick={() => {
                             this.setState({nextForm: true})
                         }}> Enter Details </Button>
                     </div>}
@@ -260,10 +261,18 @@ class CreatorPage extends React.Component {
                     <Button variant="warning" onClick={this.handleClick1}>Add Movie</Button>
                 </Form.Row>
                 <Form.Row>
-                    {this.infoText}
+                    <Form.Label>Status - {this.state.infoText}</Form.Label>
                 </Form.Row>
             </Form>
         )
+
+        const passableProps = {
+            web3: this.state.web3,
+            accounts: this.state.accounts,
+            movieContractAddress: this.state.movieContractAddress,
+            movieName: this.state.MovieName,
+            TokenSymbol: this.state.TokenSymbol
+        }
 
         return (
 
@@ -344,6 +353,14 @@ class CreatorPage extends React.Component {
                                     <Card.Text>
                                         {this.state.movieContractAddress && this.state.nextForm ? form2() : form1()}
                                     </Card.Text>
+                                </Card.Body>
+                            </Card>
+                            <Card eventKey="Movie Admin Panel" title="Movie Admin Panel">
+                                <Card.Body>
+                                    <Card.Title className="cardContainerTitle">
+                                        Admin Panel
+                                    </Card.Title>
+                                    <AdminPanel passableProps={passableProps}/>
                                 </Card.Body>
                             </Card>
                         </Tab>
