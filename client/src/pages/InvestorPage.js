@@ -1,34 +1,45 @@
 import React from 'react';
 import { Container, Card, Row, Col, Image, Navbar, Carousel } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router-dom';
-import axios from 'axios';
-
+import Web3 from 'web3';
 import Footer from './Footer';
+import getAllMovies from './../components/getAllMovies'
 
 class InvestorPage extends React.Component {
 
     constructor(props){
         super (props);
-
         this.state={
-            list_of_all_movies: null
+            list_of_all_movies: null,
+            web3: null
         }
     }
 
     componentDidMount = async () => {
 
-        const response = await axios.get("http://localhost:5000/movies");
+        await this.loadWeb3()
+        let web3 = window.web3
+        this.setState({
+            web3: web3
+        })
+        let data = await getAllMovies(web3)
 
         this.setState({
-            list_of_all_movies: response.data
+            list_of_all_movies: data
         });
     }
 
-    handleClickOnCard = async(event) =>{
-
-        console.log(event.target)
-        
-        alert(`Alert ${event.target}`)
+    async loadWeb3() {
+        if (window.ethereum) {
+          window.web3 = new Web3(window.ethereum);
+          await window.ethereum.enable();
+        } else if (window.web3) {
+          window.web3 = new Web3(window.web3.currentProvider);
+        } else {
+          window.alert(
+            "Non-Ethereum browser detected. You should consider trying MetaMask!"
+          );
+        }
     }
 
     render() {
@@ -42,8 +53,7 @@ class InvestorPage extends React.Component {
             var a = [], b;
             for (let i in this.state.list_of_all_movies) {
                 b = <Col>
-                    <Card className="movieDetails" name={this.state.list_of_all_movies[i]._id}>
-                        <Card.Img variant="top" src={`http://localhost:5000/${this.state.list_of_all_movies[i].image.data}`}></Card.Img>
+                    <Card className="movieDetails" name={this.state.list_of_all_movies[i].name}>
                         <Card.Body>
                             <Card.Title>
                                 {this.state.list_of_all_movies[i].name}
@@ -52,7 +62,7 @@ class InvestorPage extends React.Component {
                                 {this.state.list_of_all_movies[i].summary}
                             </Card.Text>
 
-                            <Link className = "linkToInfo" to={`/info/${this.state.list_of_all_movies[i]._id}`} detail={this.state.list_of_all_movies[i]._id}>View Details</Link>
+                            <Link className = "linkToInfo" to={`/info/${this.state.list_of_all_movies[i].address}`} detail={this.state.list_of_all_movies[i].address}>View Details</Link>
                         </Card.Body>
                     </Card>
                 </Col>

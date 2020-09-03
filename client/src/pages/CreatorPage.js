@@ -7,6 +7,7 @@ import AdminPanel from './../components/movieAdminPanel'
 import FactoryContract from '../contracts/FactoryContract.json';
 import MovieContract from '../contracts/MovieContract.json';
 import ipfs from './ipfs';
+import getAllMovies from './../components/getAllMovies'
 
 const GAS = 10000000;
 const GAS_PRICE = "20000000000";
@@ -53,7 +54,8 @@ class CreatorPage extends React.Component {
             deployedNetwork.address
             // '0xbCf0166D8a3b374FFFbd4F9C16d6B73397CdEf06'
         );
-
+        
+        let data = await getAllMovies(web3)
         
         // const FactoryInstance = await new web3.eth.Contract(FactoryContract.abi, '0x50A4dd5EC76374458Bd69cFF48AF3D88c512e73e')
         window.FactoryInstance = FactoryInstance;
@@ -62,7 +64,8 @@ class CreatorPage extends React.Component {
         this.setState({
             web3: web3,
             accounts: accounts,
-            FactoryInstance: FactoryInstance
+            FactoryInstance: FactoryInstance,
+            list_of_all_movies: data
         });
 
 
@@ -181,8 +184,7 @@ class CreatorPage extends React.Component {
             var a = [], b;
             for (let i in this.state.list_of_all_movies) {
                 b = <Col>
-                    <Card className="movieDetails">
-                        <Card.Img variant="top" src={`http://localhost:5000/${this.state.list_of_all_movies[i].image.data}`}></Card.Img>
+                    <Card className="movieDetails" name={this.state.list_of_all_movies[i].name}>
                         <Card.Body>
                             <Card.Title>
                                 {this.state.list_of_all_movies[i].name}
@@ -191,7 +193,7 @@ class CreatorPage extends React.Component {
                                 {this.state.list_of_all_movies[i].summary}
                             </Card.Text>
 
-                            <Link className="linkToInfo" to={`/info/${this.state.list_of_all_movies[i]._id}`} detail={this.state.list_of_all_movies[i]._id}>View Details</Link>
+                            <Link className = "linkToInfo" to={`/info/${this.state.list_of_all_movies[i].address}`} detail={this.state.list_of_all_movies[i].address}>View Details</Link>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -355,7 +357,9 @@ class CreatorPage extends React.Component {
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
-                            <Card eventKey="Movie Admin Panel" title="Movie Admin Panel">
+                        </Tab>
+                        <Tab eventKey="Movie Admin Panel" title="Movie Admin Panel">
+                            <Card className="cardContainer">
                                 <Card.Body>
                                     <Card.Title className="cardContainerTitle">
                                         Admin Panel

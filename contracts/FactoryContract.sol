@@ -1,13 +1,10 @@
 pragma solidity ^0.5.1;
 
-import "./SafeMath.sol";
 import "./MovieContract.sol";
 
 contract FactoryContract {
-  
-    using SafeMath for uint256;
 
-	uint256 public contractCount;
+	uint public contractCount;
 	address[] public contractContainer;
 	address public recentContract;
 
@@ -30,11 +27,11 @@ contract FactoryContract {
 		return NameToMovieContracts[_name];
 	}
 
-	function findByAddress(address memory _owner) public view returns(address){
+	function findByAddress(address _owner) public view returns(address){
 		return AddressToMovieContracts[_owner];
 	}
 	
-	function findById(string memory _id) public view returns(address){
+	function findById(uint _id) public view returns(address){
 		return IdToMovieContracts[_id];
 	}
 	
