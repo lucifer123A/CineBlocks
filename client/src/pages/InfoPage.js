@@ -11,7 +11,7 @@ function InfoPage (props) {
     const [web3, setWeb3] = useState()
     const [instance, setInstance] = useState()
     const [account, setAccount] = useState()
-    const [movieData, setMovieData] = useState({})
+    const [movieData, setMovieData] = useState(null)
     const [tokensOwned, setTokensOwned] = useState()
     const [buyTokens, setBuyTokens] = useState()
     const [updateData, setUpdateData] = useState(false)
@@ -67,26 +67,28 @@ function InfoPage (props) {
             rate = rate.toNumber() / (10 ** 18)
             deadline = handleDate(deadline)
             creationDate = handleDate(creationDate)
-            totalInvestment = totalInvestment.toNumber() / (10 ** 18)
-            totalProfit = totalProfit.toNumber() / (10 ** 18)
+            totalInvestment = totalInvestment.toString() 
+            totalInvestment /= (10 ** 18)
+            totalProfit = totalProfit.toString() 
+            totalProfit /= (10 ** 18)
             setMovieData({ name: movie.name, owner: owner, summary: movie.details, rate: rate, tokenName: tokenName, tokenAddress: tokenAddress, deadline: deadline, creationDate: creationDate, totalInvestment: totalInvestment, totalProfit: totalProfit, ipfsHash: movie.ipfsHash, state: movieStates[state]})
         }
 
         useEffect(() => {
-            if(movieData !== {}) {
+            if(movieData !== null) {
                 console.log('fetched ', movieData)
             }
-            if(movieData === {} && updateData) {
-                fetchData(instance)
-                setUpdateData(false)
-            }
+            // if(movieData === {} && updateData) {
+            //     fetchData(instance)
+            //     setUpdateData(false)
+            // }
         }, [movieData])
 
         useEffect(() => {
             if(updateData) {
-                setMovieData({})
-                // fetchData(instance)
-                // setUpdateData(false)
+                setMovieData(null)
+                fetchData(instance)
+                setUpdateData(false)
             }
         }, [updateData])
 
@@ -126,6 +128,7 @@ function InfoPage (props) {
                 setInfoText('Error buying tokens.')
             })
         setInfoText('Tokens purchased successfully.')
+        setUpdateData(true)
     }
 
     const withdrawToken = (e) => {
@@ -196,6 +199,7 @@ function InfoPage (props) {
 
                     </Col>
                 </Row>
+                <hr /><br />
                 <Row>
                     <Col>
                         <Form>
@@ -230,7 +234,7 @@ function InfoPage (props) {
 
             <Container>
                 <Card className="infoCard">
-                    {movieData ? <Main /> : <Card.Title>Loading</Card.Title>}
+                    {movieData === null ? <Card.Title>Loading</Card.Title> : <Main />}
                 </Card>
             </Container>
             <Footer></Footer>
