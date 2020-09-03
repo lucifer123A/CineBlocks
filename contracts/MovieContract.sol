@@ -9,6 +9,7 @@ contract MovieContract {
   address payable public owner;
   address public tokenAddress;
   string public movieName;
+  string public summary;
   string public tokenName;
   uint256 public deadline;
   uint256 public totalSupply;
@@ -22,7 +23,7 @@ contract MovieContract {
   uint256 public totalInvestment;
   uint256 public totalProfit;
 
-  uint internal rate = 0.001 * 10 ** 18; //ETH per Token
+  uint public rate = 0.001 * 10 ** 18; //ETH per Token
 
   enum State { PRE_PRODUCTION, PRODUCTION, RELEASED, OVER } // Rate - 0.001, 0.003, profitDependent
   State public currentState = State.PRE_PRODUCTION;
@@ -85,6 +86,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   function addMovie(string memory _details, string memory _ipfs, uint256 _timeInDays) public onlyOwner{
     movie.name = movieName;
     movie.details = _details;
+    summary = _details;
     movie.ipfsHash = _ipfs;
     deadline = now + _timeInDays * 1 days;
   }
