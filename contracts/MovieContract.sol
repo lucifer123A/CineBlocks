@@ -43,6 +43,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     string details;
     uint256 creationDate;
     uint256 deadline;
+    uint256 maxReleaseLimit;
     string ipfsHash;
   }
 
@@ -81,8 +82,8 @@ constructor(string memory _movieName, address payable _movieCreator) public{
 //Events
   event TokenSold(address buyer,uint256 amount);
   event etherWithdrawn(address rec,string designation,uint256 amount);
-  event etherWithdrawn(address rec,uint256 amount);
   event MovieState(State _currentState, uint _currentRate);
+  event etherReleased(uint256 _amount, string _reason); //only owner releases funds small expenses
 
 
 
@@ -92,6 +93,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     summary = _details;
     movie.ipfsHash = _ipfs;
     movie.deadline = now + _timeInDays * 1 days;
+    movie.maxReleaseLimit = 5 * 10 ** 18;
   }
 
   function createMovieToken(string memory _symbol, string memory _name, uint256 _totalSupply) public onlyOwner{
@@ -166,6 +168,12 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     
     
     emit etherWithdrawn(requests[_index].recipient,requests[_index].receiverDesignation,requests[_index].amountOfEth);
+  }
+
+  function releaseFunds(uint256 _amount, string memory _reason) public onlyOwner payable {
+    require(_amount < movie.maxReleaseLimit, 'Open vote to withdraw more ether.');
+    owner.transfer(_amount);
+    emit etherReleased(_amount, _reason);
   }
   
   function getBalance() public view returns(uint256){
