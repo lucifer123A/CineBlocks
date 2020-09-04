@@ -25,10 +25,10 @@ class CreatorPage extends React.Component {
             TokenSymbol: null,
             Summary: "",
             Description: "",
+            Deadline: '',
             Image: null,
             list_of_all_movies: null,
             web3: null,
-            accounts: null,
             FactoryInstance: null,
             loading: true,
             imgBuffer: null,
@@ -101,9 +101,10 @@ class CreatorPage extends React.Component {
 
         const res = await contract.methods.newMovieContract(this.state.MovieName)
             .send({from: this.state.accounts[0], gas: GAS, gasPrice: GAS_PRICE})
-            // .then(res => {
-            //     console.log('new movie contract ', res)
-            // })
+            .then(res => {
+                console.log('new movie contract ', res)
+                this.setState({infoText: 'Movie Contract created! Enter details.'})
+            })
             .catch(err => console.log('Error generating movie contract ', err))
         await contract.methods.recentContract()
             .call()
@@ -119,9 +120,11 @@ class CreatorPage extends React.Component {
     }
 
     handleClick1 = async(e) => {
-        const {web3, contract, accounts, movieContractAddress, Summary, Description, TokenName, TokenSymbol} = this.state;
+        this.setState({infoText: 'Creating movie token ..'})
+        const {web3, contract, accounts, movieContractAddress, Summary, Deadline, TokenName, TokenSymbol} = this.state;
         const instance = new web3.eth.Contract(MovieContract.abi, movieContractAddress);
         this.setState({movieInstance: instance})
+
 
         await instance.methods.createMovieToken(TokenSymbol, TokenName, web3.utils.toHex(10 ** 18))
             .send({ from: accounts[0], gas: GAS, gasPrice: GAS_PRICE})
@@ -129,14 +132,21 @@ class CreatorPage extends React.Component {
                 console.log('token ', txhash)
                 this.setState({infoText: 'Movie token Created! Pushing movie details..'})
             })
+            .catch(err => {
+                this.setState({infoText: 'Error creating token.'})
+                console.log(err)
+            })
         // await this.upload();
 
-        // TODO: add description field in contract and timeEnd in form here
-        await instance.methods.addMovie(Summary, this.state.ipfsHash, web3.utils.toHex(100))
+        await instance.methods.addMovie(Summary, this.state.ipfsHash, web3.utils.toHex(parseInt(Deadline, 10)))
         .send({ from: accounts[0], gas: GAS, gasPrice: GAS_PRICE})
         .then(txhash => {
             console.log('token ', txhash)
             this.setState({infoText: 'Movie Details added'})
+        })
+        .catch(err => {
+            this.setState({inforText: 'Error pushing movie details.'})
+            console.log(err)
         })
     }
 
@@ -241,7 +251,13 @@ class CreatorPage extends React.Component {
                         <Form.Label>Token Name :</Form.Label>
                         <Form.Control type="text" name="TokenName" value={this.state.TokenName} onChange={this.handleChange} required />
                     </Form.Group>
-                </Form.Row>                
+                </Form.Row> 
+                <Form.Row className="justify-content-md-center">
+                    <Form.Group as={Col} controlId="deadline">
+                        <Form.Label>Approximate Deadline : (in days)</Form.Label>
+                        <Form.Control type="text" name="Deadline" value={this.state.Deadline} onChange={this.handleChange} placeholder="Enter an Approximate Project deadline in days."  required />
+                    </Form.Group>
+                </Form.Row>               
                 <Form.Row className="justify-content-md-center">
                     <Form.Group as={Col} controlId="Summary">
                         <Form.Label>Summary :</Form.Label>
@@ -249,7 +265,7 @@ class CreatorPage extends React.Component {
                     </Form.Group>
                 </Form.Row>
                 <Form.Row className="justify-content-md-center">
-                    <Form.Group as={Col} controlId="exampleForm.ControlTextarea1">
+                    <Form.Group as={Col} controlId="description">
                         <Form.Label>Description : </Form.Label>
                         <Form.Control as="textarea" rows="3" name="Description" value={this.state.Description} onChange={this.handleChange} placeholder="Brief Description About your movie." />
                     </Form.Group>
@@ -268,13 +284,14 @@ class CreatorPage extends React.Component {
             </Form>
         )
 
-        const passableProps = {
-            web3: this.state.web3,
-            accounts: this.state.accounts,
-            movieContractAddress: this.state.movieContractAddress,
-            movieName: this.state.MovieName,
-            TokenSymbol: this.state.TokenSymbol
-        }
+        // const passableProps = {
+        //     web3: this.state.web3,
+        //     accounts: this.state.accounts,
+        //     // movieContractAddress: this.state.movieContractAddress,
+        //     // movieName: this.state.MovieName,
+        //     // tokenSymbol: this.state.TokenSymbol,
+        //     // instance: this.state.movieInstance
+        // }
 
         return (
 
@@ -364,9 +381,7 @@ class CreatorPage extends React.Component {
                                     <Card.Title className="cardContainerTitle">
                                         Admin Panel
                                     </Card.Title>
-                                    <Card.Text>
-                                        <AdminPanel passableProps={passableProps}/>
-                                    </Card.Text>
+                                    <AdminPanel/>
                                 </Card.Body>
                             </Card>
                         </Tab>

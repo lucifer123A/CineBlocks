@@ -171,8 +171,8 @@ function InfoPage (props) {
                         <Image width="80%" src={`http://localhost:5000/${this.state.movieData.image.data}`} alt={this.state.movieData.name}></Image>
                     </Col> */}
                     <Col xs={8}>
-                        Description : <br /><hr />
-                        {movieData.summary}
+                        Description : 
+                        {movieData.summary} <br /><hr />
                     </Col>
                     <Col>
                         <Button variant='outline-primary' onClick={()=>setUpdateData(true)}>Refresh Data</Button>

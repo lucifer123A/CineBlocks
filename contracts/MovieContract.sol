@@ -93,7 +93,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     summary = _details;
     movie.ipfsHash = _ipfs;
     movie.deadline = now + _timeInDays * 1 days;
-    movie.maxReleaseLimit = 5 * 10 ** 18;
+    movie.maxReleaseLimit = 5 ether;
   }
 
   function createMovieToken(string memory _symbol, string memory _name, uint256 _totalSupply) public onlyOwner{
@@ -144,7 +144,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     totalInvestment += msg.value;
     emit TokenSold(_to,_numberOfTokens);
   }
-
+/*
   function  initiateRequest(string memory _desc,address payable _rec,string memory _receiverDesignation,uint256 _val) public onlyOwner{
   	requestCount++;
   	requests[requestCount] = WithdrawRequest(_val.mul(1 ether),0,_desc,_receiverDesignation,false,_rec);
@@ -169,7 +169,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     
     emit etherWithdrawn(requests[_index].recipient,requests[_index].receiverDesignation,requests[_index].amountOfEth);
   }
-
+*/
   function releaseFunds(uint256 _amount, string memory _reason) public onlyOwner payable {
     require(_amount < movie.maxReleaseLimit, 'Open vote to withdraw more ether.');
     owner.transfer(_amount);
