@@ -21,21 +21,8 @@ function InfoPage (props) {
     const [amount1, setAmount1] = useState()
     // const [ethCost, setEthCost] = useState() //can display eth cost 
 
-    useEffect(async () => {
- 
-        await loadWeb3()
-        const web3 = window.web3;
-        const accounts = await web3.eth.getAccounts();
-        const instance = new web3.eth.Contract(
-            MovieContract.abi,
-            props.match.params.movieId
-        );
-        window.movieContract = instance //debugging
-        await fetchData(instance)
-        setWeb3(web3)
-        setAccount(accounts[0])
-        setInstance(instance)
-
+    useEffect(() => {
+        loadWeb3()
     }, [])
 
 
@@ -50,25 +37,37 @@ function InfoPage (props) {
             "Non-Ethereum browser detected. You should consider trying MetaMask!"
           );
         }
+        const web3 = window.web3;
+        web3.eth.handleRevert = true
+        const accounts = await web3.eth.getAccounts();
+        const instance = new web3.eth.Contract(
+            MovieContract.abi,
+            props.match.params.movieId
+        );
+        window.movieContract = instance //debugging
+        await fetchData(instance, web3, accounts[0])
+        setWeb3(web3)
+        setAccount(accounts[0])
+        setInstance(instance)
     }
 
-    const fetchData = async (instance) => {
+    const fetchData = async (instance, web3, account) => {
             console.log('fetching data')
             let owner = await instance.methods.owner().call()
             let rate = await instance.methods.rate().call()
             let tokenName = await instance.methods.tokenName().call()
             let tokenAddress = await instance.methods.token().call()
-            // let deadline = await instance.methods.deadline().call()
-            // let creationDate = await instance.methods.creationDate().call()
             let totalInvestment = await instance.methods.totalInvestment().call()
             let totalProfit = await instance.methods.totalProfit().call()
             let state = await instance.methods.currentState().call()
             let movie = await instance.methods.movie().call()
+            let tokenSymbol = ''
             if(web3 && tokenAddress && account) {
                 let tokeninstance = new web3.eth.Contract(TokenFactory.abi, tokenAddress);
-                let tokens = await tokeninstance.methods.balanceOf(account);
+                console.log(tokeninstance, 'dvdvc', tokeninstance.methods)
+                let tokens = await tokeninstance.methods.balanceOf(account).call();
                 tokens = tokens.toString()
-                tokens /= (10 ** 18)
+                tokenSymbol = await tokeninstance.methods.symbol().call()
                 setTokensOwned(tokens)
             }
 
@@ -79,7 +78,7 @@ function InfoPage (props) {
             totalInvestment /= (10 ** 18)
             totalProfit = totalProfit.toString() 
             totalProfit /= (10 ** 18)
-            setMovieData({ name: movie.name, owner: owner, summary: movie.details, rate: rate, tokenName: tokenName, tokenAddress: tokenAddress, deadline: deadline, creationDate: creationDate, totalInvestment: totalInvestment, totalProfit: totalProfit, ipfsHash: movie.ipfsHash, state: movieStates[state]})
+            setMovieData({ name: movie.name, owner: owner, summary: movie.details, rate: rate, tokenName: tokenName, tokenSymbol: tokenSymbol,tokenAddress: tokenAddress, deadline: deadline, creationDate: creationDate, totalInvestment: totalInvestment, totalProfit: totalProfit, ipfsHash: movie.ipfsHash, state: movieStates[state]})
         }
 
         useEffect(() => {
@@ -95,7 +94,7 @@ function InfoPage (props) {
         useEffect(() => {
             if(updateData) {
                 setMovieData(null)
-                fetchData(instance)
+                fetchData(instance, web3, account)
                 setUpdateData(false)
             }
         }, [updateData])
@@ -121,7 +120,7 @@ function InfoPage (props) {
         let x = Math.floor(Math.random() * 100).toString()
         let n = 'Anon Investor ' + x
         let ethCost = amount * 10 ** 18 * movieData.rate
-        setInfoText(`At current rate, buying ${amount} tokens for ${amount * movieData.rate} ETH..`)
+        setInfoText(`At current rate, buying ${amount} ${movieData.tokenSymbol} for ${amount * movieData.rate} ETH..`)
         instance.methods.buyMovieTokens(n, x)
             .send({
                 from: account,
@@ -143,8 +142,8 @@ function InfoPage (props) {
     const withdrawToken = (e) => {
         e.preventDefault()
         setInfoText('Initializing withdraw method')
-        amount1 = amount1 * 10 ** 18
-        setInfoText(`At current rate, selling ${amount1} tokens for ${amount1 * movieData.rate} ETH..`)
+        let amount12 = amount1 * 10 ** 18
+        setInfoText(`At current rate, selling ${amount1} ${movieData.tokenSymbol} for ${amount1 * movieData.rate} ETH..`)
         instance.methods.unlockEther(amount1)
             .send({
                 from: account,
@@ -178,8 +177,8 @@ function InfoPage (props) {
                     <Col>
                         <Button variant='outline-primary' onClick={()=>setUpdateData(true)}>Refresh Data</Button>
                     </Col>
+                    <hr /><br />
                 </Row>
-                <hr /><br />
                 <Row  className='justify-content-md'>
                     <Col>
                         CreationDate: {movieData.creationDate}
@@ -194,7 +193,7 @@ function InfoPage (props) {
                 <hr /><br />
                 <Row className='justify-content-md-center'>
                     <Col>
-                        CurrentRate: {movieData.rate} ETH / Token
+                        CurrentRate: {movieData.rate} ETH / {movieData.tokenSymbol ? movieData.tokenSymbol : 'Token'}
                     </Col>
                     <Col>
                         Total Investment: {movieData.totalInvestment} ETH
@@ -221,11 +220,10 @@ function InfoPage (props) {
                     </Col>
                     <Col className="justify-content-md-center">
 
-                        <h4>Tokens Owned : {tokensOwned}</h4>
-
+                        <h4>Tokens Owned : {tokensOwned} {movieData.tokenSymbol}</h4>
+                        <hr /><br />
                     </Col>
                 </Row>
-                <hr /><br />
                 <Row>
                     <Col>
                         <Form>

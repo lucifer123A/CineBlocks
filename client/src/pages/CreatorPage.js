@@ -364,7 +364,9 @@ class CreatorPage extends React.Component {
                                     <Card.Title className="cardContainerTitle">
                                         Admin Panel
                                     </Card.Title>
-                                    <AdminPanel passableProps={passableProps}/>
+                                    <Card.Text>
+                                        <AdminPanel passableProps={passableProps}/>
+                                    </Card.Text>
                                 </Card.Body>
                             </Card>
                         </Tab>

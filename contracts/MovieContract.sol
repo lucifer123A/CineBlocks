@@ -113,6 +113,10 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     return rate;
   }
 
+  function projectUpdate(string memory _update) public onlyOwner {
+    updates.push(_update);
+  }
+
   function reportProfit() public payable onlyOwner {
     require(currentState == State.RELEASED);
     require(msg.value > 0);
@@ -174,7 +178,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     token = TokenFactory(tokenAddress);
   
     uint256 totalTokens = token.balanceOf(user);
-    require (_amountOfTokens.mul(1000000000000000000) < totalTokens, "Not Enough tokens");
+    require (_amountOfTokens < totalTokens, "Not Enough tokens");
     // uint256 totalEth = _amountOfTokens.mul(1000000000000000);
     uint256 totalEth = _amountOfTokens.mul(rate);
     require(investedAmount[msg.sender] > totalEth);
