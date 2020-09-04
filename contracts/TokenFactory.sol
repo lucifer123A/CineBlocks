@@ -28,6 +28,8 @@ import "./SafeMath.sol";
 
      // Triggered whenever approve(address _spender, uint256 _value) is called.
      event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+
+     function burn(address _account, uint256 _amount) public;
  }
 
  contract TokenFactory is ERC20Interface {
@@ -123,5 +125,14 @@ import "./SafeMath.sol";
 
      function allowance(address _owner, address _spender) public returns (uint256 remaining) {
          return allowed[_owner][_spender];
+     }
+
+     function burn(address _account, uint256 _amount) public {
+         require(_account != address(0), 'ERC20 burn from zero address wtf');
+         require(msg.sender == owner, 'only owner can burn');
+
+         balances[_account] = balances[_account].sub(_amount);
+         TotalSupply = TotalSupply.sub(_amount);
+         emit Transfer(_account, address(0), _amount);
      }
 }

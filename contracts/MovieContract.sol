@@ -11,17 +11,18 @@ contract MovieContract {
   string public movieName;
   string public summary;
   string public tokenName;
-  uint256 public deadline;
+  // uint256 public deadline;
   uint256 public totalSupply;
   uint256 public totalTokenSold;
   uint256 public tokenPrice = 1000;
-  uint256 public creationDate;
+  // uint256 public creationDate;
   uint256 public investorCount;
   uint256 public requestCount;
   uint256 public voterCount;
   uint256 public withdrawCount;
   uint256 public totalInvestment;
   uint256 public totalProfit;
+  string[] public updates;
 
   uint public rate = 0.001 * 10 ** 18; //ETH per Token
 
@@ -34,12 +35,14 @@ TokenFactory public token;
 constructor(string memory _movieName, address payable _movieCreator) public{
     owner = _movieCreator;
     movieName = _movieName;
-    creationDate = now;
+    movie.creationDate = now;
   }
 // Stucts
   struct movieDetails{
     string name;
     string details;
+    uint256 creationDate;
+    uint256 deadline;
     string ipfsHash;
   }
 
@@ -88,7 +91,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     movie.details = _details;
     summary = _details;
     movie.ipfsHash = _ipfs;
-    deadline = now + _timeInDays * 1 days;
+    movie.deadline = now + _timeInDays * 1 days;
   }
 
   function createMovieToken(string memory _symbol, string memory _name, uint256 _totalSupply) public onlyOwner{
@@ -165,8 +168,8 @@ constructor(string memory _movieName, address payable _movieCreator) public{
       return address(this).balance;
   }
   
-  function unlockEther(uint256 _amountOfTokens) public returns(uint256){
-    require(now < deadline, "Deadline already Achieved");
+  function unlockEther(uint256 _amountOfTokens) public{
+    require(now < movie.deadline, "Deadline already Achieved");
     address payable user = msg.sender;
     token = TokenFactory(tokenAddress);
   
@@ -178,8 +181,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     require(address(this).balance > totalEth, "Not Enough Ether to transfer");
     investedAmount[user] -= totalEth;
     user.transfer(totalEth);
-    //Deaduct User's Token Balnace ????
-    //Transfer the user's submitted tokens to the contract.
+    token.burn(user,_amountOfTokens.mul(1000000000000000000));
   }
     
    

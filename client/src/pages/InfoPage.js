@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Navbar, Image, Row, Card, Container, Col, Form, Button } from 'react-bootstrap';
 import MovieContract from '../contracts/MovieContract.json';
+import TokenFactory from '../contracts/TokenFactory.json';
 import Web3 from 'web3';
 import Footer from './Footer';
 
@@ -57,16 +58,23 @@ function InfoPage (props) {
             let rate = await instance.methods.rate().call()
             let tokenName = await instance.methods.tokenName().call()
             let tokenAddress = await instance.methods.token().call()
-            let deadline = await instance.methods.deadline().call()
-            let creationDate = await instance.methods.creationDate().call()
+            // let deadline = await instance.methods.deadline().call()
+            // let creationDate = await instance.methods.creationDate().call()
             let totalInvestment = await instance.methods.totalInvestment().call()
             let totalProfit = await instance.methods.totalProfit().call()
             let state = await instance.methods.currentState().call()
             let movie = await instance.methods.movie().call()
+            if(web3 && tokenAddress && account) {
+                let tokeninstance = new web3.eth.Contract(TokenFactory.abi, tokenAddress);
+                let tokens = await tokeninstance.methods.balanceOf(account);
+                tokens = tokens.toString()
+                tokens /= (10 ** 18)
+                setTokensOwned(tokens)
+            }
 
             rate = rate.toNumber() / (10 ** 18)
-            deadline = handleDate(deadline)
-            creationDate = handleDate(creationDate)
+            let deadline = handleDate(movie.deadline)
+            let creationDate = handleDate(movie.creationDate)
             totalInvestment = totalInvestment.toString() 
             totalInvestment /= (10 ** 18)
             totalProfit = totalProfit.toString() 
@@ -107,14 +115,14 @@ function InfoPage (props) {
         }
     }, [movieData])
 
-    const buyToken = async (e) => {
+    const buyToken = (e) => {
         e.preventDefault()
         setInfoText('Initializing buy method')
         let x = Math.floor(Math.random() * 100).toString()
         let n = 'Anon Investor ' + x
         let ethCost = amount * 10 ** 18 * movieData.rate
-
-        await instance.methods.buyMovieTokens(n, x)
+        setInfoText(`At current rate, buying ${amount} tokens for ${amount * movieData.rate} ETH..`)
+        instance.methods.buyMovieTokens(n, x)
             .send({
                 from: account,
                 gas: 5000000,
@@ -122,17 +130,35 @@ function InfoPage (props) {
             })
             .then(tx => {
                 console.log('tokens bought ', tx)
+                setInfoText(`Tokens purchased successfully.`)
+                setUpdateData(true)
+
             })
             .catch(err => {
                 console.log('Error buying', err);
                 setInfoText('Error buying tokens.')
             })
-        setInfoText('Tokens purchased successfully.')
-        setUpdateData(true)
     }
 
     const withdrawToken = (e) => {
         e.preventDefault()
+        setInfoText('Initializing withdraw method')
+        amount1 = amount1 * 10 ** 18
+        setInfoText(`At current rate, selling ${amount1} tokens for ${amount1 * movieData.rate} ETH..`)
+        instance.methods.unlockEther(amount1)
+            .send({
+                from: account,
+                gas: 5000000
+            })
+            .then(tx => {
+                console.log('withdrawn ', tx)
+                setInfoText('Tokens withdrawn')
+            })
+            .catch(err => {
+                setInfoText('Error withdrawing tokens.')
+                console.log('error withdrawing ', err)
+            })
+
     }
 
     const Main = () => (
@@ -195,7 +221,7 @@ function InfoPage (props) {
                     </Col>
                     <Col className="justify-content-md-center">
 
-                        <h4>Tokens Owned : {movieData.tokensOwned}</h4>
+                        <h4>Tokens Owned : {tokensOwned}</h4>
 
                     </Col>
                 </Row>
