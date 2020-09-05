@@ -13,7 +13,7 @@ class FirstPage extends React.Component {
                         Welcome to
                     </h2>
                     <h1 className="title-app">
-                        CINEBOCKS
+                        CINEBLOCKS
                     </h1>
                    <Button variant="warning" onClick={() => {this.props.history.push('/creator')}}>Login as Creator</Button>
                    <Button variant="warning" onClick={() => {this.props.history.push('/investor')}}>Login as Investor</Button>

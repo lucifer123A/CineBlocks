@@ -8,6 +8,8 @@ import FactoryContract from '../contracts/FactoryContract.json';
 import MovieContract from '../contracts/MovieContract.json';
 import ipfs from './ipfs';
 import getAllMovies from './../components/getAllMovies'
+import ProgressBar from 'react-bootstrap/ProgressBar'
+
 
 const GAS = 10000000;
 const GAS_PRICE = "20000000000";
@@ -37,7 +39,9 @@ class CreatorPage extends React.Component {
             movieInstance: null,
             ipfsHash: '',
             infoText: '...',
-            activeTab: ''
+            activeTab: '',
+            progress: {show: false, val: 0}
+
         }
     }
 
@@ -100,13 +104,25 @@ class CreatorPage extends React.Component {
     handleClick = async (event) => {
         const contract = this.state.FactoryInstance;
 
-        const res = await contract.methods.newMovieContract(this.state.MovieName)
+        await contract.methods.newMovieContract(this.state.MovieName)
             .send({from: this.state.accounts[0], gas: GAS, gasPrice: GAS_PRICE})
+            .on('transactionHash', h => {
+                console.log('tx hash', h)
+                this.setState({progress: {show: true, val: 5}})
+            })
+            .on('confirmation', c => {
+                this.setState({progress: {show: true, val: Math.floor(c/24 * 100)}})
+            })
             .then(res => {
                 console.log('new movie contract ', res)
                 this.setState({infoText: 'Movie Contract created! Enter details.'})
+                this.setState({progress: {show: true, val: 1}})
             })
-            .catch(err => console.log('Error generating movie contract ', err))
+            .catch(err => {
+                console.log('Error generating movie contract ', err)
+                this.setState({progress: {show: false, val: 0}})
+                this.setState({infoText: 'Error creating movie contract.'})
+        })
         await contract.methods.recentContract()
             .call()
             .then(res => {
@@ -129,25 +145,43 @@ class CreatorPage extends React.Component {
 
         await instance.methods.createMovieToken(TokenSymbol, TokenName, web3.utils.toHex(10 ** 18))
             .send({ from: accounts[0], gas: GAS, gasPrice: GAS_PRICE})
+            .on('transactionHash', h => {
+                console.log('tx hash', h)
+                this.setState({progress: {show: true, val: 5}})
+            })
+            .on('confirmation', c => {
+                this.setState({progress: {show: true, val: Math.floor(c/24 * 100)}})
+            })
             .then(txhash => {
                 console.log('token ', txhash)
                 this.setState({infoText: 'Movie token Created! Pushing movie details..'})
+                this.setState({progress: {show: false, val: 0}})
             })
             .catch(err => {
                 this.setState({infoText: 'Error creating token.'})
+                this.setState({progress: {show: false, val: 0}})
                 console.log(err)
             })
         // await this.upload();
 
         await instance.methods.addMovie(Summary, this.state.ipfsHash, web3.utils.toHex(parseInt(Deadline, 10)))
         .send({ from: accounts[0], gas: GAS, gasPrice: GAS_PRICE})
+        .on('transactionHash', h => {
+            console.log('tx hash', h)
+            this.setState({progress: {show: true, val: 5}})
+        })
+        .on('confirmation', c => {
+            this.setState({progress: {show: true, val: Math.floor(c/24 * 100)}})
+        })
         .then(txhash => {
             console.log('token ', txhash)
             this.setState({infoText: 'Movie Details added'})
+            this.setState({progress: {show: false, val: 0}})
         })
         .catch(err => {
             this.setState({inforText: 'Error pushing movie details.'})
             console.log(err)
+            this.setState({progress: {show: false, val: 0}})
         })
     }
 
@@ -284,7 +318,10 @@ class CreatorPage extends React.Component {
                     <Button variant="warning" onClick={this.handleClick1}>Add Movie</Button>
                 </Form.Row>
                 <Form.Row>
-                    <Form.Label>Status - {this.state.infoText}</Form.Label>
+                    <text style={{color:'white'}}>{this.state.infoText}</text>
+                    {this.state.progress.show && <div style={{padding:'15px'}}>
+                        <ProgressBar animated label={`${this.state.progress.val}`} now={this.state.progress.val} variant='success'/> 
+                    </div>}                
                 </Form.Row>
             </Form>
         )

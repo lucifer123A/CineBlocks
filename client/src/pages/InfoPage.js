@@ -4,6 +4,8 @@ import MovieContract from '../contracts/MovieContract.json';
 import TokenFactory from '../contracts/TokenFactory.json';
 import Web3 from 'web3';
 import Footer from './Footer';
+import ProgressBar from 'react-bootstrap/ProgressBar'
+
 
 const movieStates = ['PRE_PRODUCTION', 'PRODUCTION', 'RELEASED', 'OVER'] 
 
@@ -19,7 +21,7 @@ function InfoPage (props) {
     const [infoText, setInfoText] = useState('')
     const [amount, setAmount] = useState()
     const [amount1, setAmount1] = useState()
-    // const [ethCost, setEthCost] = useState() //can display eth cost 
+    const [progress, setProgress] = useState({show: false, val: 0})
 
     useEffect(() => {
         loadWeb3()
@@ -61,6 +63,7 @@ function InfoPage (props) {
             let totalProfit = await instance.methods.totalProfit().call()
             let state = await instance.methods.currentState().call()
             let movie = await instance.methods.movie().call()
+            // let totalTokensSold = await instance.methods.totalTokensSold().call()
             let tokenSymbol = ''
             if(web3 && tokenAddress && account) {
                 let tokeninstance = new web3.eth.Contract(TokenFactory.abi, tokenAddress);
@@ -79,7 +82,9 @@ function InfoPage (props) {
             totalInvestment /= (10 ** 18)
             totalProfit = totalProfit.toString() 
             totalProfit /= (10 ** 18)
-            setMovieData({ name: movie.name, owner: owner, summary: movie.details, rate: rate, tokenName: tokenName, tokenSymbol: tokenSymbol,tokenAddress: tokenAddress, deadline: deadline, creationDate: creationDate, totalInvestment: totalInvestment, totalProfit: totalProfit, ipfsHash: movie.ipfsHash, state: movieStates[state]})
+            setMovieData({ name: movie.name, owner: owner, summary: movie.details, rate: rate, tokenName: tokenName, tokenSymbol: tokenSymbol,tokenAddress: tokenAddress, deadline: deadline, creationDate: creationDate, totalInvestment: totalInvestment, 
+                // totalTokensSold: totalTokensSold.toString() ,
+                totalProfit: totalProfit, ipfsHash: movie.ipfsHash, state: movieStates[state]})
         }
 
         useEffect(() => {
@@ -129,14 +134,23 @@ function InfoPage (props) {
                 gas: 5000000,
                 value: web3.utils.toHex(ethCost)
             })
+            .on('transactionHash', h => {
+                console.log('tx hash', h)
+                setProgress({show: true, val: 5})
+            })
+            .on('confirmation', c => {
+                setProgress({show: true, val: Math.floor(c/24 * 100)})
+            })
             .then(tx => {
                 console.log('tokens bought ', tx)
                 setInfoText(`Tokens purchased successfully.`)
+                setProgress({show: false, val: 0})
                 setUpdateData(true)
 
             })
             .catch(err => {
                 console.log('Error buying', err);
+                setProgress({show: false, val: 0})
                 setInfoText('Error buying tokens.')
             })
     }
@@ -144,20 +158,29 @@ function InfoPage (props) {
     const withdrawToken = (e) => {
         e.preventDefault()
         setInfoText('Initializing withdraw method')
-        let amount12 = amount1 * 10 ** 18
+        // let amount12 = amount1 * 10 ** 18
         setInfoText(`At current rate, selling ${amount1} ${movieData.tokenSymbol} for ${amount1 * movieData.rate} ETH..`)
         instance.methods.unlockEther(amount1)
             .send({
                 from: account,
                 gas: 5000000
             })
+            .on('transactionHash', h => {
+                console.log('tx hash', h)
+                setProgress({show: true, val: 5})
+            })
+            .on('confirmation', c => {
+                setProgress({show: true, val: Math.floor(c/24 * 100)})
+            })
             .then(tx => {
                 console.log('withdrawn ', tx)
                 setInfoText('Tokens withdrawn')
+                setProgress({show: false, val: 0})
             })
             .catch(err => {
                 setInfoText('Error withdrawing tokens.')
                 console.log('error withdrawing ', err)
+                setProgress({show: false, val: 0})
             })
 
     }
@@ -222,7 +245,7 @@ function InfoPage (props) {
                     </Col>
                     <Col className="justify-content-md-center">
 
-                        <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol}</text></h4>
+                        {/* <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol} ({(tokensOwned/movieData.totalTokensSold) * 100} %)</text></h4> */}
                         <hr /><br />
                     </Col>
                 </Row>
@@ -239,8 +262,10 @@ function InfoPage (props) {
                         </Form>
                     </Col>
                     <Col className="justify-content-md-center">
-                        { infoText === '' ? '' : <div>Transaction Status : {infoText}</div>}
-                        <br></br>
+                        Transaction Status : <text style={{color:'white'}}>{infoText}</text>
+                        {progress.show && <div style={{padding:'15px'}}>
+                            <ProgressBar animated label={`${progress.val}`} now={progress.val} variant='success'/> 
+                        </div>}
                     </Col>
                 </Row>
             </Card.Text>

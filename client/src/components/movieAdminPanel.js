@@ -3,7 +3,7 @@ import { Card, Row, Col, Form, Button } from 'react-bootstrap';
 import TokenFactory from '../contracts/TokenFactory.json';
 import FactoryContract from '../contracts/FactoryContract.json';
 import MovieContract from '../contracts/MovieContract.json';
-
+import ProgressBar from 'react-bootstrap/ProgressBar'
 const movieStates = ['PRE_PRODUCTION', 'PRODUCTION', 'RELEASED', 'OVER'] 
 
 export default function AdminPanel(props) {
@@ -20,6 +20,7 @@ export default function AdminPanel(props) {
     const [account, setAccount] = useState()
     const [instance, setInstance] = useState()
     const [movieAddress, setMovieAddress] = useState('')
+    const [progress, setProgress] = useState({show: false, val: 0})
 
 
     useEffect(() => {
@@ -130,12 +131,21 @@ export default function AdminPanel(props) {
                 from: account,
                 gas: 2000000
             })
+            .on('transactionHash', h => {
+                console.log('tx hash', h)
+                setProgress({show: true, val: 5})
+            })
+            .on('confirmation', c => {
+                setProgress({show: true, val: Math.floor(c/24 * 100)})
+            })
             .then(tx => {
                 console.log(tx)
                 setInfoText('Status pushed successfully.')
+                setProgress({show: false, val: 0})
             })
             .catch(err => {
                 console.log(err)
+                setProgress({show: false, val: 0})
                 setInfoText('Error pushing status.')
             })
     }
@@ -148,19 +158,23 @@ export default function AdminPanel(props) {
                 from: account,
                 gas: 2000000
             })
-            .on('receipt', c => console.log('receipt ', c))
             .on('transactionHash', h => {
                 console.log('tx hash', h)
+                setProgress({show: true, val: 5})
             })
-            .on('confirmation', c => console.log(' confirm ', c))
+            .on('confirmation', c => {
+                setProgress({show: true, val: Math.floor(c/24 * 100)})
+            })
             .then(tx => {
                 console.log(tx)
                 setInfoText('State updated successfully.')
+                setProgress({show: false, val: 0})
                 setUpdateData(true)
             })
             .catch(err => {
                 console.log(err)
                 setInfoText('Error updating state.')
+                setProgress({show: false, val: 0})
             })
     }
 
@@ -181,15 +195,20 @@ export default function AdminPanel(props) {
             })
             .on('transactionHash', h => {
                 console.log('tx hash', h)
+                setProgress({show: true, val: 5})
             })
-            .on('confirmation', c => console.log(' confirm ', c))
+            .on('confirmation', c => {
+                setProgress({show: true, val: Math.floor(c/24 * 100)})
+            })
             .then(tx => {
                 console.log(tx)
                 setInfoText('Profit sent successfully.')
+                setProgress({show: false, val: 0})
                 setUpdateData(true)
             })
             .catch(err => {
                 console.log(err)
+                setProgress({show: false, val: 0})
                 setInfoText('Error sending profit.')
             })
 
@@ -217,13 +236,22 @@ export default function AdminPanel(props) {
                 from: account,
                 gas: 5000000
             })
+            .on('transactionHash', h => {
+                console.log('tx hash', h)
+                setProgress({show: true, val: 5})
+            })
+            .on('confirmation', c => {
+                setProgress({show: true, val: Math.floor(c/24 * 100)})
+            })
             .then(tx => {
                 console.log(tx)
                 setInfoText('Withdraw Successful!')
+                setProgress({show: false, val: 0})
             })
             .catch(err => {
                 console.log(err)
                 setInfoText('Error submitting request.')
+                setProgress({show: false, val: 0})
             })
     }
 
@@ -317,7 +345,10 @@ export default function AdminPanel(props) {
             </Form>
             <Row className='justify-content-md-center'>
                 <Col>
-                    {infoText}
+                    <text style={{color:'white'}}>{infoText}</text>
+                    {progress.show && <div style={{padding:'15px'}}>
+                        <ProgressBar animated label={`${progress.val}`} now={progress.val} variant='success'/> 
+                    </div>}
                 </Col>
             </Row>
         </Card.Text>
