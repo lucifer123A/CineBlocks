@@ -71,7 +71,8 @@ function InfoPage (props) {
                 setTokensOwned(tokens)
             }
 
-            rate = rate.toNumber() / (10 ** 18)
+            rate = rate.toString()
+            rate /= (10 ** 18)
             let deadline = handleDate(movie.deadline)
             let creationDate = handleDate(movie.creationDate)
             totalInvestment = totalInvestment.toString() 
@@ -105,6 +106,7 @@ function InfoPage (props) {
         timeIn *=1000
         let d = new Date(timeIn)
         d = d.toUTCString()
+        d = d.split(' ').slice(0,5).join(' ')
         return d
     }
 
@@ -171,8 +173,8 @@ function InfoPage (props) {
                         <Image width="80%" src={`http://localhost:5000/${this.state.movieData.image.data}`} alt={this.state.movieData.name}></Image>
                     </Col> */}
                     <Col xs={8}>
-                        Description : 
-                        {movieData.summary} <br /><hr />
+                        Description :  <text style={{color:"white"}}>{movieData.summary}</text>
+                         <br /><hr />
                     </Col>
                     <Col>
                         <Button variant='outline-primary' onClick={()=>setUpdateData(true)}>Refresh Data</Button>
@@ -181,28 +183,28 @@ function InfoPage (props) {
                 </Row>
                 <Row  className='justify-content-md'>
                     <Col>
-                        CreationDate: {movieData.creationDate}
+                        CreationDate: <text style={{color:"white"}}>{movieData.creationDate}</text>
                     </Col>
                     <Col>
-                        Deadline: {movieData.deadline}
+                        Deadline: <text style={{color:"white"}}>{movieData.deadline}</text>
                     </Col>
                     <Col>
-                        Owner:{movieData.owner}
+                        Owner:<text style={{color:"white", fontSize:'80%'}}>{movieData.owner}</text>
                     </Col>
                 </Row>
                 <hr /><br />
                 <Row className='justify-content-md-center'>
                     <Col>
-                        CurrentRate: {movieData.rate} ETH / {movieData.tokenSymbol ? movieData.tokenSymbol : 'Token'}
+                        CurrentRate: <text style={{color:"white"}}>{movieData.rate} ETH / {movieData.tokenSymbol ? movieData.tokenSymbol : 'Token'}</text>
                     </Col>
                     <Col>
-                        Total Investment: {movieData.totalInvestment} ETH
+                        Total Investment: <text style={{color:"white"}}>{movieData.totalInvestment} ETH</text>
                     </Col>
                     <Col>
-                        Project State: {movieData.state}                    
+                        Project State: <text style={{color:"white"}}>{movieData.state}</text>                   
                     </Col>
                     <Col>
-                        Total Profit: {movieData.totalProfit} ETH
+                        Total Profit: <text style={{color:"white"}}>{movieData.totalProfit} ETH</text>
                     </Col>
                 </Row>
                 <hr /><br />
@@ -220,7 +222,7 @@ function InfoPage (props) {
                     </Col>
                     <Col className="justify-content-md-center">
 
-                        <h4>Tokens Owned : {tokensOwned} {movieData.tokenSymbol}</h4>
+                        <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol}</text></h4>
                         <hr /><br />
                     </Col>
                 </Row>

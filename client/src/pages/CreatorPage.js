@@ -36,7 +36,8 @@ class CreatorPage extends React.Component {
             nextForm: null,
             movieInstance: null,
             ipfsHash: '',
-            infoText: '...'
+            infoText: '...',
+            activeTab: ''
         }
     }
 
@@ -180,7 +181,11 @@ class CreatorPage extends React.Component {
                 this.setState({ipfshash : res[0].hash})
             }
         })
+    }
 
+    changeTabs = e => {
+        console.log('on', e)
+        this.setState({activeTab: e})
     }
 
     render() {
@@ -346,7 +351,7 @@ class CreatorPage extends React.Component {
                     </Carousel>
                 </Container>
                 <Container>
-                    <Tabs defaultActiveKey="All Projects">
+                    <Tabs defaultActiveKey="All Projects" onSelect={this.changeTabs}>
                         <Tab eventKey="All Projects" title="All Projects">
                             <Card className="cardContainer">
                                 <Card.Body>
@@ -376,14 +381,16 @@ class CreatorPage extends React.Component {
                             </Card>
                         </Tab>
                         <Tab eventKey="Movie Admin Panel" title="Movie Admin Panel">
-                            <Card className="cardContainer">
-                                <Card.Body>
-                                    <Card.Title className="cardContainerTitle">
-                                        Admin Panel
-                                    </Card.Title>
-                                    <AdminPanel/>
-                                </Card.Body>
-                            </Card>
+                            <div className='infoPage'>
+                                <Card className="infoCard">
+                                    <Card.Body>
+                                        <Card.Title className="cardContainerTitle">
+                                            Admin Panel
+                                        </Card.Title>
+                                        {this.state.activeTab === 'Movie Admin Panel' && <AdminPanel/>}
+                                    </Card.Body>
+                                </Card>
+                            </div>
                         </Tab>
                     </Tabs>
                 </Container>
