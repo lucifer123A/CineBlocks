@@ -1,7 +1,9 @@
 const path = require("path");
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const infuraKey = "e0545923a679490dbad2b378f01621ac";
-const mnemonic = 'garment chase garbage excess lecture noble bachelor wet apart domain section card';
+require('dotenv').config()
+
+const infuraKey = process.env.INFURA_KEY;
+const mnemonic = process.env.MNEMONIC;
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -26,9 +28,6 @@ module.exports = {
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
-    },
-    develop: {
-      port: 8545
     }
   },
   mocha: {

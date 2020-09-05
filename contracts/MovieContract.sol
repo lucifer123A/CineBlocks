@@ -123,7 +123,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     require(currentState == State.RELEASED);
     require(msg.value > 0);
     totalProfit += msg.value;
-    rate = totalProfit.div(totalInvestment);
+    rate = totalProfit.div(totalInvestment).mul(10 ** 18);
     emit MovieState(currentState, rate);    
   }
 
@@ -192,7 +192,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     require(investedAmount[msg.sender] > totalEth);
     require(address(this).balance > totalEth, "Not Enough Ether to transfer");
     investedAmount[user] -= totalEth;
-    totalTokensSold -= _amountOfTokens;
+    totalTokenSold -= _amountOfTokens;
     user.transfer(totalEth);
     token.burn(user,_amountOfTokens);
   }
