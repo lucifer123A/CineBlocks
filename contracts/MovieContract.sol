@@ -192,8 +192,9 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     require(investedAmount[msg.sender] > totalEth);
     require(address(this).balance > totalEth, "Not Enough Ether to transfer");
     investedAmount[user] -= totalEth;
+    totalTokensSold -= _amountOfTokens;
     user.transfer(totalEth);
-    token.burn(user,_amountOfTokens.mul(1000000000000000000));
+    token.burn(user,_amountOfTokens);
   }
     
    
