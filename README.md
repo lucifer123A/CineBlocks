@@ -59,4 +59,12 @@ However, with the reliable security of Blockchain as well as self executable Sma
 * Eliminates fraud cases.
 
 ### CHALLENGES
-* Establishing trust between film unit and investor by maintaining anonymity.
+ **Implementing Nested Contract for the First Time**
+ * CineBLOCKS includes a feature that allows every Movie Creator to create his own contract with all necessary details and rules included in it.
+ * However, programming this feature in Solidity was initially a troublesome task for me since I never deployed any such contract before. 
+ * The task was demanding and required some strong understanding of the Solidity Language. However, programming nested contracts gradually became       understandable and I was able to do it.
+
+**Distribution of Profit among the investors**
+ * Whenever an investor invests in a particular movie, He/She gets some token(movieNameToken) in his wallet.
+ * However, the value of these tokens must increase with the increase in the profit earned by the movie. 
+ * And this was one of the major blockers that I faced while programming the Smart Contract.
