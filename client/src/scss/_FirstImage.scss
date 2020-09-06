@@ -2,10 +2,11 @@
     background: 
         linear-gradient(
             to right,
-            rgba($primary-color, 0.9),
-            rgba($primary-color, 0.8)
+            rgba($primary-color, 0.5),
+            rgba($primary-color, 0.4)
         ),
-        url('../images/Background-1.png') center top;
+        // url('../images/Background-1.png') center top;
+        url('../images/try1.jpg') center top;
     background-size: cover;
 
     height: 100vh;
@@ -22,7 +23,7 @@
     .title-app{
 
         font-size: 10vw;
-        font-family: cursive;
+        font-family: roboto;
         color: $secondary-color;
         padding-bottom: 1rem;
         margin-bottom: 1rem;

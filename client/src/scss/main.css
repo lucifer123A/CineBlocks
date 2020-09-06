@@ -1,37 +1,30 @@
 * {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 .home {
-  background: -webkit-gradient(linear, left top, right top, from(rgba(31, 31, 31, 0.9)), to(rgba(31, 31, 31, 0.8))), url("../images/Background-1.png") center top;
-  background: linear-gradient(to right, rgba(31, 31, 31, 0.9), rgba(31, 31, 31, 0.8)), url("../images/Background-1.png") center top;
+  background: linear-gradient(to right, rgba(31, 31, 31, 0.5), rgba(31, 31, 31, 0.4)), url("../images/try1.jpg") center top;
   background-size: cover;
   height: 100vh;
   padding-top: 20vh;
   overflow: hidden;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   text-align: center;
   color: white;
 }
-
 .home .title-welcome {
   font-size: 3vw;
 }
-
 .home .title-app {
   font-size: 10vw;
-  font-family: cursive;
+  font-family: roboto;
   color: #f5c518;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
   border-bottom: 2px solid #f5c518;
 }
-
 .home button {
   padding: 15px 32px;
   margin-right: 2rem;
@@ -42,12 +35,9 @@
   font-size: auto;
   font-weight: 700;
   width: 30vw;
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
   height: fit-content;
   opacity: 100;
 }
-
 .home img {
   height: 20vw;
   width: auto;
@@ -57,88 +47,70 @@
   height: 100%;
   background: #1f1f1f;
 }
-
 .creatorPage .navbar {
   background: #f5c518;
   margin-bottom: 10px;
 }
-
 .creatorPage .navbar .navbar-brand {
   margin-right: auto;
   margin-left: auto;
 }
-
 .creatorPage .navbar .navbar-brand img {
   width: 30vw;
 }
-
 .creatorPage .nav-tabs {
   border-bottom: 1px solid #1f1f1f;
-  -webkit-transition: all 0.8s ease-in-out;
   transition: all 0.8s ease-in-out;
 }
-
 .creatorPage .nav-tabs a {
   color: #f5c518;
 }
-
 .creatorPage .nav-tabs .active {
   color: #f5c518;
   background: black;
   border-color: black;
 }
-
 .creatorPage .AddMovieTitle {
-  font-weight: 800;
+  font-weight: 600;
   font-size: 5vh;
   text-align: center;
   margin-bottom: 2rem;
   color: yellow;
 }
-
 .creatorPage .addMovieCard {
   background: #000000;
 }
-
 .creatorPage .addMovieCard label {
   color: #f5c518;
 }
-
 .creatorPage .addMovieCard .form-control-file {
   color: white;
 }
-
 .creatorPage .cardContainer {
   background: #000000;
 }
-
 .creatorPage .cardContainerTitle {
-  font-weight: 800;
+  font-weight: 600;
   font-size: 5vh;
   text-align: center;
   margin-bottom: 2rem;
   color: yellow;
 }
-
 .creatorPage .movieDetails.card {
   margin-bottom: 1rem;
   margin-top: 1rem;
   background: #f5c518;
-  -webkit-transition: all 0.8s ease-in-out;
   transition: all 0.8s ease-in-out;
 }
-
 .creatorPage .movieDetails.card:hover {
   background: #000000;
   opacity: 0.9;
   color: yellow;
 }
-
 .creatorPage .movieDetails.card:hover .linkToInfo {
   font-weight: 600;
   color: yellow;
 }
-
 .creatorPage .movieDetails.card .linkToInfo {
   text-decoration: underline;
   color: black;
@@ -149,21 +121,17 @@ footer {
   color: white;
   padding: 2rem;
 }
-
 footer .copyright {
   color: white;
   margin-right: auto;
   margin-left: auto;
 }
-
 footer ul {
   list-style-type: none;
 }
-
 footer ul li {
   margin: 5px;
 }
-
 footer .social-icons {
   bottom: 1rem;
   left: 1rem;
@@ -171,15 +139,12 @@ footer .social-icons {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-
 footer .social-icons a {
   padding: 0.4rem;
   color: white;
   margin: 1rem;
-  -webkit-transition: all 0.8s ease-in-out;
   transition: all 0.8s ease-in-out;
 }
-
 footer .social-icons a:hover {
   color: #f5c518;
 }
@@ -188,22 +153,18 @@ footer .social-icons a:hover {
   height: 100%;
   background: #1f1f1f;
 }
-
 .investorPage .navbar {
   background: #f5c518;
   margin-bottom: 10px;
 }
-
 .investorPage .navbar .navbar-brand img {
   margin-left: 10vw;
   width: 18%;
   padding: 0%;
 }
-
 .investorPage .cardContainer {
   background: #000000;
 }
-
 .investorPage .cardContainerTitle {
   font-weight: 800;
   font-size: 5vh;
@@ -211,26 +172,21 @@ footer .social-icons a:hover {
   margin-bottom: 2rem;
   color: yellow;
 }
-
 .investorPage .movieDetails.card {
   margin-bottom: 1rem;
   margin-top: 1rem;
   background: #f5c518;
-  -webkit-transition: all 0.8s ease-in-out;
   transition: all 0.8s ease-in-out;
 }
-
 .investorPage .movieDetails.card:hover {
   background: #000000;
   opacity: 0.9;
   color: yellow;
 }
-
 .investorPage .movieDetails.card:hover .linkToInfo {
   font-weight: 600;
   color: yellow;
 }
-
 .investorPage .movieDetails.card .linkToInfo {
   text-decoration: underline;
   color: black;
@@ -241,56 +197,48 @@ footer .social-icons a:hover {
   min-height: 100vh;
   background: #1f1f1f;
 }
-
 .infoPage .navbar {
   background: #f5c518;
   margin-bottom: 10px;
 }
-
 .infoPage .navbar .navbar-brand {
   margin-right: auto;
   margin-left: auto;
 }
-
 .infoPage .navbar .navbar-brand img {
   width: 30vw;
 }
-
 .infoPage .infoCard {
   background: black;
-  color: #f5c518;
+  color: #9efd9a;
 }
-
 .infoPage .infoCard .card-title {
-  font-weight: 800;
+  font-weight: 600;
   font-size: 5vh;
   text-align: center;
   margin-bottom: 2rem;
   color: #f5c518;
 }
-
 .infoPage .infoCard img {
   border: 1px solid #f5c518;
   margin-bottom: 3rem;
 }
-
 .infoPage .infoCard hr {
   background: #f5c518;
 }
 
 body {
   height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1;
 }
-
 body .App {
   height: 100vh;
   width: 100%;
 }
-
 body .App footer {
   bottom: 1rem;
   position: absolute;
 }
+
 /*# sourceMappingURL=main.css.map */
