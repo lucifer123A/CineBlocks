@@ -228,10 +228,13 @@ export default function AdminPanel(props) {
         let reason = prompt(`Enter reason for withdrawing ${fundsInput}`)
         reason = reason.toString()
 
-        if(reason === '') return
-        setInfoText('Reason recorded, submitting withdraw request')
+        if(reason === '') {
+            setInfoText('Reason recorded, submitting withdraw request')
+            return
+        }
+        console.log(fundsInput, 'vdvd', web3.utils.toHex(fundsInput * 10 ** 18), reason)
 
-        instance.methods.releaseFunds(web3.utils.toHex(fundsInput * 10 ** 18))
+        instance.methods.releaseFunds(web3.utils.toHex(fundsInput * 10 ** 18), reason)
             .send({
                 from: account,
                 gas: 5000000
@@ -315,7 +318,7 @@ export default function AdminPanel(props) {
                         <Form.Label>Update Project Status :</Form.Label>
                         <Form.Control type="text" name="updateProject" value={statusInput} onChange={e=>setStatusInput(e.target.value)} placeholder='Enter recent project updates.' />
                         <br />
-                        <Button variant='warning' onClick={handleStatus}>Update</Button>
+                        <Button variant='success' onClick={handleStatus}>Update</Button>
                     </Form.Group>
                     <Form.Group as={Col} controlId="state">
                         <Form.Label>Update Project State :</Form.Label>
@@ -325,7 +328,7 @@ export default function AdminPanel(props) {
                             ))}
                         </Form.Control>
                         <br />
-                        <Button variant='warning' onClick={handleState}>Update</Button>
+                        <Button variant='success' onClick={handleState}>Update</Button>
                     </Form.Group>
                 </Form.Row> 
                 <Form.Row className="justify-content-md-center">
@@ -333,13 +336,13 @@ export default function AdminPanel(props) {
                         <Form.Label>Report Profit :</Form.Label>
                         <Form.Control type="text" name="reportprofit" value={profitInput} onChange={e=>setProfitInput(e.target.value)} placeholder='0 ETH' />
                         <br />
-                        <Button variant='warning' onClick={handleProfit}>Report</Button>
+                        <Button variant='success' onClick={handleProfit}>Report</Button>
                     </Form.Group>
                     <Form.Group as={Col} controlId="withdrawEth">
                         <Form.Label>Withdraw Funds :</Form.Label>
                         <Form.Control type="text" name="withdraw" value={fundsInput} onChange={e=>setFundsInput(e.target.value)} placeholder='0 ETH' />
                         <br />
-                        <Button variant='warning' onClick={handleFunds}>Withdraw</Button>
+                        <Button variant='success' onClick={handleFunds}>Withdraw</Button>
                     </Form.Group>
                 </Form.Row> 
             </Form>

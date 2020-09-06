@@ -108,6 +108,7 @@ class CreatorPage extends React.Component {
             .send({from: this.state.accounts[0], gas: GAS, gasPrice: GAS_PRICE})
             .on('transactionHash', h => {
                 console.log('tx hash', h)
+                this.setState({infoText: 'Creating movie contract'})
                 this.setState({progress: {show: true, val: 5}})
             })
             .on('confirmation', c => {
@@ -116,7 +117,7 @@ class CreatorPage extends React.Component {
             .then(res => {
                 console.log('new movie contract ', res)
                 this.setState({infoText: 'Movie Contract created! Enter details.'})
-                this.setState({progress: {show: true, val: 1}})
+                this.setState({progress: {show: false, val: 1}})
             })
             .catch(err => {
                 console.log('Error generating movie contract ', err)
@@ -260,20 +261,26 @@ class CreatorPage extends React.Component {
                     </Form.Group>
                 </Form.Row>
                 <Form.Row>
-                    <Button variant="warning" onClick={this.handleClick} disabled={this.state.movieContractAddress?true:false}>Instantiate Movie Contract</Button>
+                    <Button variant="warning" onClick={this.handleClick} disabled={this.state.movieContractAddress?true:false}>Instantiate Movie Contract</Button> 
                 </Form.Row>
+                <br /><text style={{color:'white'}}>{this.state.infoText}</text>
+                    {this.state.progress.show && <div style={{padding:'15px'}}>
+                        <ProgressBar animated label={`${this.state.progress.val}`} now={this.state.progress.val} variant='success'/> 
+                    </div>} 
                 <Form.Row>
                     {this.state.movieContractAddress && 
                     <div>
-                        <Form.Label>Movie contract address is <strong>{this.state.movieContractAddress}</strong></Form.Label>
-                        <Button variant='warning' onClick={() => {
+                        <Form.Label>Movie contract address is <strong>{this.state.movieContractAddress}</strong></Form.Label> <br />
+                        <Button variant='success' onClick={() => {
                             this.setState({nextForm: true})
                         }}> Enter Details </Button>
                     </div>}
+
                 </Form.Row>
             </Form>
         )
         const form2 = () => (
+            <>
             <Form>
                 <Form.Row className="justify-content-md-center">
                     <Form.Group as={Col} controlId="MovieName">
@@ -317,13 +324,13 @@ class CreatorPage extends React.Component {
                 <Form.Row>
                     <Button variant="warning" onClick={this.handleClick1}>Add Movie</Button>
                 </Form.Row>
-                <Form.Row>
-                    <text style={{color:'white'}}>{this.state.infoText}</text>
-                    {this.state.progress.show && <div style={{padding:'15px'}}>
-                        <ProgressBar animated label={`${this.state.progress.val}`} now={this.state.progress.val} variant='success'/> 
-                    </div>}                
-                </Form.Row>
             </Form>
+                <text style={{color:'white'}}>{this.state.infoText}</text>
+                {this.state.progress.show && <div style={{padding:'15px'}}>
+                    <ProgressBar animated label={`${this.state.progress.val}`} now={this.state.progress.val} variant='success'/> 
+                </div>} 
+            </>
+
         )
 
         // const passableProps = {

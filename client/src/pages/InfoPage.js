@@ -63,13 +63,15 @@ function InfoPage (props) {
             let totalProfit = await instance.methods.totalProfit().call()
             let state = await instance.methods.currentState().call()
             let movie = await instance.methods.movie().call()
-            // let totalTokensSold = await instance.methods.totalTokensSold().call()
+            let totalTokensSold = await instance.methods.totalTokenSold().call()
             let tokenSymbol = ''
             if(web3 && tokenAddress && account) {
                 let tokeninstance = new web3.eth.Contract(TokenFactory.abi, tokenAddress);
                 console.log(tokeninstance, 'dvdvc', tokeninstance.methods)
                 let tokens = await tokeninstance.methods.balanceOf(account).call();
                 tokens = tokens.toString()
+                window.tokensinstance = tokeninstance
+                console.log('tokens', tokens, account)
                 tokenSymbol = await tokeninstance.methods.symbol().call()
                 setTokensOwned(tokens)
             }
@@ -82,8 +84,9 @@ function InfoPage (props) {
             totalInvestment /= (10 ** 18)
             totalProfit = totalProfit.toString() 
             totalProfit /= (10 ** 18)
+            console.log('total ', totalTokensSold.toString(), tokensOwned)
             setMovieData({ name: movie.name, owner: owner, summary: movie.details, rate: rate, tokenName: tokenName, tokenSymbol: tokenSymbol,tokenAddress: tokenAddress, deadline: deadline, creationDate: creationDate, totalInvestment: totalInvestment, 
-                // totalTokensSold: totalTokensSold.toString() ,
+                totalTokensSold: totalTokensSold.toString() ,
                 totalProfit: totalProfit, ipfsHash: movie.ipfsHash, state: movieStates[state]})
         }
 
@@ -240,12 +243,12 @@ function InfoPage (props) {
                                     <Form.Control type="text" placeholder='100' value={amount} name="BuyTokens" onChange={e=>setAmount(e.target.value)} required />
                                 </Form.Group>
                             </Form.Row>
-                            <Button variant="warning" onClick={buyToken}>Buy Token</Button>
+                            <Button variant="success" onClick={buyToken}>Buy Token</Button>
                         </Form>
                     </Col>
                     <Col className="justify-content-md-center">
 
-                        {/* <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol} ({(tokensOwned/movieData.totalTokensSold) * 100} %)</text></h4> */}
+                        <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol} ({ !tokensOwned ? '0' : (tokensOwned/movieData.totalTokensSold) * 100} %)</text></h4>
                         <hr /><br />
                     </Col>
                 </Row>
@@ -258,7 +261,7 @@ function InfoPage (props) {
                                     <Form.Control type="text" placeholder='100' value={amount1} name="BuyTokens" onChange={e=>setAmount1(e.target.value)} required />
                                 </Form.Group>
                             </Form.Row>
-                            <Button variant="warning" onClick={withdrawToken}>Withdraw Token</Button>
+                            <Button variant="success" onClick={withdrawToken}>Withdraw Token</Button>
                         </Form>
                     </Col>
                     <Col className="justify-content-md-center">
