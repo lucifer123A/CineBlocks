@@ -1,5 +1,4 @@
-# HACK PRESENTATION
-
+CineBLOCKS
 Telling stories through camera and creating one masterpiece after another, a job at a film production company sounds like working in a dream factory. But there always lies an incredibly troublesome hurdle that needs most of our attention but actually gets the least.
 
 
@@ -46,7 +45,7 @@ However, with the reliable security of Blockchain as well as self executable Sma
 
 ### FEATURES 
 
-* This DApp empowers you to steer and invest in various parts of the **Entertainment industry.**
+* This DApp empowers you to steer and invest in various parts of the **Film Production industry.**
 * A user can act as :-
     * An Investor 
     * A Movie/Series Creator  
