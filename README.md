@@ -2,7 +2,7 @@
 ---
 Telling stories through camera and creating one masterpiece after another, a job at a film production company sounds like working in a dream factory. But there always lies an incredibly troublesome hurdle that needs most of our attention but actually gets the least.
 
-
+![](https://i.imgur.com/hSkykoA.jpg)
 
 ## A Brief Glance at the Problem  
  
@@ -16,6 +16,7 @@ A careful observation will lead us to the fact that there are 2 major hurdles in
 * Most importantly, it becomes immensely difficult for artists with a new story, character or vision to receive any sort of funding.
 * This is because for producers,investing in movies is more about profits than about the story. 
 
+![](https://i.imgur.com/bnjDhpV.png)
 
 **2. Long list of Middlemen**
 * However, the problem is not just with the central authority control over the idustry or getting a movie produced.
@@ -49,13 +50,21 @@ However, with the reliable security of Blockchain as well as self executable Sma
 * This DApp empowers you to steer and invest in various parts of the **Film Production industry.**
 * A user can act as :-
     * An Investor 
-    * A Movie/Series Creator  
+    * A Movie/Series Creator 
+  ![](https://i.imgur.com/7EP5Azf.jpg)
+
 * Provides an open platform for people with budding ideas and lack of funds and resources.
+![](https://i.imgur.com/W8ucRrO.jpg)
+
 * Rules out the power possessed by producers and middlemen which results in trusted, more sercure, and faster payments.
 * Gives an insight on where the funds are being used as all the transaction history is stored on the blockchain itself.
+![](https://i.imgur.com/ZknOB5i.jpg)
+
 * The investors (common public) can keep a check on the progress of the project and value of the token.
 * Also helps in promoting solidarity among people, mutual co-operation, as well as mutual harmony.
 * Investors can earn through tokens according to the profit earned by the project. 
+![](https://i.imgur.com/jppZ895.jpg)
+
 * Eliminates fraud cases.
 
 ### CHALLENGES
