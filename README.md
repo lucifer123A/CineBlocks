@@ -1,4 +1,5 @@
-CineBLOCKS
+# CineBLOCKS
+---
 Telling stories through camera and creating one masterpiece after another, a job at a film production company sounds like working in a dream factory. But there always lies an incredibly troublesome hurdle that needs most of our attention but actually gets the least.
 
 
