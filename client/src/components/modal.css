@@ -1,0 +1,32 @@
+.main {
+    color: white;
+}
+.body {
+    color: 'black';
+    background: #1f1f1f;
+    max-height: 500px;
+    overflow-y: scroll;  
+    overflow: auto;
+}
+.header {
+    color: #9efd9a;
+    background: #1f1f1f;
+}
+.message {
+    font-size: 22px;
+    font-weight: 200;
+}
+.time{
+    font-size: 16px;
+    color: #f5c518;
+}
+
+.updatesDiv {
+    color: 'blue';
+    text-align-last: center;
+
+}
+
+.loader {
+    align-self: center;
+}
