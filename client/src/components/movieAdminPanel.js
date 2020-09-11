@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+// import web3 from './../components/web3'
 import { Card, Row, Col, Form, Button } from 'react-bootstrap';
 import TokenFactory from '../contracts/TokenFactory.json';
 import FactoryContract from '../contracts/FactoryContract.json';
@@ -45,10 +46,9 @@ export default function AdminPanel(props) {
             .then(res => {
                 console.log('contracts of user', res)
                 r=res
+                setMovieAddress(res)
                 if(res === "0x0000000000000000000000000000000000000000") {
                     alert('No contract Found.')
-                } else {
-                    setMovieAddress(res)
                 }
             })
             .catch(err => {
@@ -126,7 +126,10 @@ export default function AdminPanel(props) {
     const handleStatus = e => {
         e.preventDefault()
         setInfoText('Pushing recent status..')
-        instance.methods.projectUpdate(statusInput)
+        let c = new Date()
+        c = c.toUTCString().split(' ').slice(0,5).join(' ')
+        c = '[' + c + '] ' + statusInput
+        instance.methods.projectUpdate(c)
             .send({
                 from: account,
                 gas: 2000000
@@ -136,13 +139,19 @@ export default function AdminPanel(props) {
                 setProgress({show: true, val: 5})
             })
             .on('confirmation', c => {
-                setProgress({show: true, val: Math.floor(c/24 * 100)})
+                if(c < 6) {
+                    setProgress({show: true, val: Math.floor(c/5 * 100)})
+                }
+                if(c === 6) {
+                    setInfoText('Status pushed successfully.')
+                    setProgress({show: false, val: 0})
+                }
             })
-            .then(tx => {
-                console.log(tx)
-                setInfoText('Status pushed successfully.')
-                setProgress({show: false, val: 0})
-            })
+            // .then(tx => {
+            //     console.log(tx)
+            //     setInfoText('Status pushed successfully.')
+            //     setProgress({show: false, val: 0})
+            // })
             .catch(err => {
                 console.log(err)
                 setProgress({show: false, val: 0})
@@ -163,14 +172,21 @@ export default function AdminPanel(props) {
                 setProgress({show: true, val: 5})
             })
             .on('confirmation', c => {
-                setProgress({show: true, val: Math.floor(c/24 * 100)})
+                if(c < 6) {
+                    setProgress({show: true, val: Math.floor(c/5 * 100)})
+                }
+                if(c === 6) {
+                    setInfoText('State updated successfully.')
+                    setProgress({show: false, val: 0})
+                    setUpdateData(true)
+                }
             })
-            .then(tx => {
-                console.log(tx)
-                setInfoText('State updated successfully.')
-                setProgress({show: false, val: 0})
-                setUpdateData(true)
-            })
+            // .then(tx => {
+            //     console.log(tx)
+            //     setInfoText('State updated successfully.')
+            //     setProgress({show: false, val: 0})
+            //     setUpdateData(true)
+            // })
             .catch(err => {
                 console.log(err)
                 setInfoText('Error updating state.')
@@ -198,14 +214,21 @@ export default function AdminPanel(props) {
                 setProgress({show: true, val: 5})
             })
             .on('confirmation', c => {
-                setProgress({show: true, val: Math.floor(c/24 * 100)})
+                if(c < 6) {
+                    setProgress({show: true, val: Math.floor(c/5 * 100)})
+                }
+                if(c === 6) {
+                    setInfoText('Profit sent successfully.')
+                    setProgress({show: false, val: 0})
+                    setUpdateData(true)
+                }
             })
-            .then(tx => {
-                console.log(tx)
-                setInfoText('Profit sent successfully.')
-                setProgress({show: false, val: 0})
-                setUpdateData(true)
-            })
+            // .then(tx => {
+            //     console.log(tx)
+            //     setInfoText('Profit sent successfully.')
+            //     setProgress({show: false, val: 0})
+            //     setUpdateData(true)
+            // })
             .catch(err => {
                 console.log(err)
                 setProgress({show: false, val: 0})
@@ -232,7 +255,6 @@ export default function AdminPanel(props) {
             setInfoText('Reason recorded, submitting withdraw request')
             return
         }
-        console.log(fundsInput, 'vdvd', web3.utils.toHex(fundsInput * 10 ** 18), reason)
 
         instance.methods.releaseFunds(web3.utils.toHex(fundsInput * 10 ** 18), reason)
             .send({
@@ -244,13 +266,19 @@ export default function AdminPanel(props) {
                 setProgress({show: true, val: 5})
             })
             .on('confirmation', c => {
-                setProgress({show: true, val: Math.floor(c/24 * 100)})
+                if(c < 6) {
+                    setProgress({show: true, val: Math.floor(c/5 * 100)})
+                }
+                if(c === 6) {
+                    setInfoText('Withdraw Successful!')
+                    setProgress({show: false, val: 0})
+                }
             })
-            .then(tx => {
-                console.log(tx)
-                setInfoText('Withdraw Successful!')
-                setProgress({show: false, val: 0})
-            })
+            // .then(tx => {
+            //     console.log(tx)
+            //     setInfoText('Withdraw Successful!')
+            //     setProgress({show: false, val: 0})
+            // })
             .catch(err => {
                 console.log(err)
                 setInfoText('Error submitting request.')
@@ -258,7 +286,7 @@ export default function AdminPanel(props) {
             })
     }
 
-    // if(movieAddress === "0x0000000000000000000000000000000000000000") return <strong><h4>No project found.</h4></strong>
+    if(movieAddress === "0x0000000000000000000000000000000000000000") return <strong><h4>No project found.</h4></strong>
 
     if(!movieData) return <span><h4>Project Found. Loading ...</h4></span>
 
@@ -285,11 +313,11 @@ export default function AdminPanel(props) {
             </Row>
             <Row className='justify-content-md-center'>
                 <Col>
-                    Total Investment: <text style={{color:"white"}}>{movieData.totalInvestment} ETH</text>
+                    Total Investment: <text style={{color:"white"}}>{movieData.totalInvestment.toString().slice(0,7)} ETH</text>
                     <br /><hr />
                 </Col>
                 <Col>
-                    Total Profit: <text style={{color:"white"}}>{movieData.totalProfit} ETH</text>
+                    Total Profit: <text style={{color:"white"}}>{movieData.totalProfit.toString().slice(0,7)} ETH</text>
                     <br /><hr />
                 </Col>
                 <Col>
@@ -304,7 +332,7 @@ export default function AdminPanel(props) {
                     <br /><hr />
                 </Col>
                 <Col>
-                    Current Rate : <text style={{color:"white"}}>{movieData.rate} ETH / {movieData.tokenSymbol}</text>
+                    Current Rate : <text style={{color:"white"}}>{movieData.rate.toString().slice(0,7)} ETH / {movieData.tokenSymbol ? movieData.tokenSymbol : 'Token'}</text>
                     <br /><hr />
                 </Col>
                 <Col>

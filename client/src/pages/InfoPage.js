@@ -3,8 +3,10 @@ import { Navbar, Image, Row, Card, Container, Col, Form, Button } from 'react-bo
 import MovieContract from '../contracts/MovieContract.json';
 import TokenFactory from '../contracts/TokenFactory.json';
 import Web3 from 'web3';
+// import web3 from './../components/web3'
 import Footer from './Footer';
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import UpdatesModal from '../components/updatesModal'
 
 
 const movieStates = ['PRE_PRODUCTION', 'PRODUCTION', 'RELEASED', 'OVER'] 
@@ -22,6 +24,7 @@ function InfoPage (props) {
     const [amount, setAmount] = useState()
     const [amount1, setAmount1] = useState()
     const [progress, setProgress] = useState({show: false, val: 0})
+    const [modal, setModal] = useState(false)
 
     useEffect(() => {
         loadWeb3()
@@ -125,7 +128,7 @@ function InfoPage (props) {
     }, [movieData])
 
     const buyToken = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         setInfoText('Initializing buy method')
         let x = Math.floor(Math.random() * 100).toString()
         let n = 'Anon Investor ' + x
@@ -140,17 +143,27 @@ function InfoPage (props) {
             .on('transactionHash', h => {
                 console.log('tx hash', h)
                 setProgress({show: true, val: 5})
+                // setInfoText(`Tokens purchased successfully.`)
+                // setProgress({show: false, val: 0})
+                // setUpdateData(true)
             })
             .on('confirmation', c => {
-                setProgress({show: true, val: Math.floor(c/24 * 100)})
+                if(c < 6) {
+                    setProgress({show: true, val: Math.floor(c/5 * 100)})
+                }
+                if(c === 5) {
+                    setInfoText(`Tokens purchased successfully.`)
+                    setProgress({show: false, val: 0})
+                    setUpdateData(true)
+                } 
             })
-            .then(tx => {
-                console.log('tokens bought ', tx)
-                setInfoText(`Tokens purchased successfully.`)
-                setProgress({show: false, val: 0})
-                setUpdateData(true)
+            // .then(tx => {
+            //     console.log('tokens bought ', tx)
+            //     // setInfoText(`Tokens purchased successfully.`)
+            //     // setProgress({show: false, val: 0})
+            //     // setUpdateData(true)
 
-            })
+            // })
             .catch(err => {
                 console.log('Error buying', err);
                 setProgress({show: false, val: 0})
@@ -159,33 +172,48 @@ function InfoPage (props) {
     }
 
     const withdrawToken = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         setInfoText('Initializing withdraw method')
         // let amount12 = amount1 * 10 ** 18
         setInfoText(`At current rate, selling ${amount1} ${movieData.tokenSymbol} for ${amount1 * movieData.rate} ETH..`)
         instance.methods.unlockEther(amount1)
             .send({
                 from: account,
-                gas: 5000000
+                gas: 10000000
             })
             .on('transactionHash', h => {
                 console.log('tx hash', h)
                 setProgress({show: true, val: 5})
+
             })
             .on('confirmation', c => {
-                setProgress({show: true, val: Math.floor(c/24 * 100)})
+                if(c < 6) {
+                    setProgress({show: true, val: Math.floor(c/5 * 100)})
+                }
+                if(c === 5) {
+                    setInfoText('Tokens withdrawn')
+                    setProgress({show: false, val: 0})
+                    setUpdateData(true)
+                } 
             })
-            .then(tx => {
-                console.log('withdrawn ', tx)
-                setInfoText('Tokens withdrawn')
-                setProgress({show: false, val: 0})
-            })
+            // .then(tx => {
+            //     console.log('withdrawn ', tx)
+            //     // setInfoText('Tokens withdrawn')
+            //     // setProgress({show: false, val: 0})
+            // })
             .catch(err => {
                 setInfoText('Error withdrawing tokens.')
                 console.log('error withdrawing ', err)
                 setProgress({show: false, val: 0})
             })
 
+    }
+
+    const passableProps = {
+        modal: modal,
+        setModal: setModal,
+        web3: web3,
+        instance: instance
     }
 
     const Main = () => (
@@ -205,6 +233,9 @@ function InfoPage (props) {
                     <Col>
                         <Button variant='outline-primary' onClick={()=>setUpdateData(true)}>Refresh Data</Button>
                     </Col>
+                    <Col>
+                        <Button variant='outline-primary' onClick={()=>setModal(true)}>Updates</Button>
+                    </Col>
                     <hr /><br />
                 </Row>
                 <Row  className='justify-content-md'>
@@ -221,10 +252,10 @@ function InfoPage (props) {
                 <hr /><br />
                 <Row className='justify-content-md-center'>
                     <Col>
-                        CurrentRate: <text style={{color:"white"}}>{movieData.rate} ETH / {movieData.tokenSymbol ? movieData.tokenSymbol : 'Token'}</text>
+                        CurrentRate: <text style={{color:"white"}}>{movieData.rate.toString().slice(0,7)} ETH / {movieData.tokenSymbol ? movieData.tokenSymbol : 'Token'}</text>
                     </Col>
                     <Col>
-                        Total Investment: <text style={{color:"white"}}>{movieData.totalInvestment} ETH</text>
+                        Total Investment: <text style={{color:"white"}}>{movieData.totalInvestment.toString().slice(0,7)} ETH</text>
                     </Col>
                     <Col>
                         Project State: <text style={{color:"white"}}>{movieData.state}</text>                   
@@ -248,7 +279,7 @@ function InfoPage (props) {
                     </Col>
                     <Col className="justify-content-md-center">
 
-                        <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol} ({ !tokensOwned ? '0' : (tokensOwned/movieData.totalTokensSold) * 100} %)</text></h4>
+                        <h4>Tokens Owned : <text style={{color:"white"}}>{tokensOwned} {movieData.tokenSymbol} ({ !tokensOwned ? '0' : ((tokensOwned/movieData.totalTokensSold) * 100).toString().slice(0,5)} %)</text></h4>
                         <hr /><br />
                     </Col>
                 </Row>
@@ -272,6 +303,7 @@ function InfoPage (props) {
                     </Col>
                 </Row>
             </Card.Text>
+            <UpdatesModal passableProps={passableProps}/>
         </Card.Body>
     )
 

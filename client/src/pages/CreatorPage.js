@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, Card, Row, Col, Image, Navbar, Carousel, Tabs, Tab, Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Web3 from 'web3';
+// import web3 from './../components/web3'
 import Footer from './Footer';
 import AdminPanel from './../components/movieAdminPanel'
 import FactoryContract from '../contracts/FactoryContract.json';
