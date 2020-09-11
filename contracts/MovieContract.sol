@@ -14,7 +14,7 @@ contract MovieContract {
   // uint256 public deadline;
   uint256 public totalSupply;
   uint256 public totalTokenSold;
-  uint256 public tokenPrice = 1000;
+  // uint256 public tokenPrice = 1000;
   // uint256 public creationDate;
   uint256 public investorCount;
   uint256 public requestCount;
@@ -24,7 +24,7 @@ contract MovieContract {
   uint256 public totalProfit;
   string[] public updates;
 
-  uint public rate = 0.001 * 10 ** 18; //ETH per Token
+  uint256 public rate = 0.001 * 10 ** 18; //ETH per Token
 
   enum State { PRE_PRODUCTION, PRODUCTION, RELEASED, OVER } // Rate - 0.001, 0.003, profitDependent
   State public currentState = State.PRE_PRODUCTION;
@@ -123,7 +123,8 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     require(currentState == State.RELEASED);
     require(msg.value > 0);
     totalProfit += msg.value;
-    rate = totalProfit.div(totalInvestment).mul(10 ** 18);
+    // rate = totalProfit.div(totalInvestment).mul(10 ** 18);
+    rate = totalProfit.div(totalTokenSold);
     emit MovieState(currentState, rate);    
   }
 
@@ -179,6 +180,10 @@ constructor(string memory _movieName, address payable _movieCreator) public{
   function getBalance() public view returns(uint256){
       return address(this).balance;
   }
+
+  function updateCount() public view returns(uint) {
+    return updates.length;
+  }
   
   function unlockEther(uint256 _amountOfTokens) public{
     require(now < movie.deadline, "Deadline already Achieved");
@@ -186,7 +191,7 @@ constructor(string memory _movieName, address payable _movieCreator) public{
     token = TokenFactory(tokenAddress);
   
     uint256 totalTokens = token.balanceOf(user);
-    require (_amountOfTokens < totalTokens, "Not Enough tokens");
+    require (_amountOfTokens <= totalTokens, "Not Enough tokens");
     // uint256 totalEth = _amountOfTokens.mul(1000000000000000);
     uint256 totalEth = _amountOfTokens.mul(rate);
     require(investedAmount[msg.sender] > totalEth);
